@@ -3,25 +3,25 @@ import { Plus } from 'lucide-react'
 import { PageContainer } from '#/components/layout/page-container'
 import { PageHeader } from '#/components/layout/page-header'
 import { Button } from '#/components/ui/button'
-import { CustomerTable } from '#/features/customers/components/customer-table'
-import { useCustomers } from '#/features/customers/hooks/use-customers'
+import { OrderTable } from '#/features/orders/components/order-table'
+import { useOrders } from '#/features/orders/hooks/use-orders'
 
-export function CustomersPage() {
-  const { data, isLoading, isError } = useCustomers()
+export function OrdersPage() {
+  const { data, isLoading, isError } = useOrders()
 
   if (isLoading) {
     return (
       <PageContainer>
         <PageHeader
-          title="Clientes"
-          description="Gerencie os clientes da concessionária."
+          title="Pedidos"
+          description="Gerencie os pedidos de motocicletas."
           actions={
-          <Button
-            nativeButton={false}
-            render={<Link to="/clientes/novo" />}
-          >
-            Novo cliente
-          </Button>
+            <Button
+              render={<Link to="/pedidos/novo" />}
+            >
+              <Plus />
+              Novo pedido
+            </Button>
           }
         />
 
@@ -34,13 +34,13 @@ export function CustomersPage() {
     return (
       <PageContainer>
         <PageHeader
-          title="Clientes"
-          description="Gerencie os clientes da concessionária."
+          title="Pedidos"
+          description="Gerencie os pedidos de motocicletas."
         />
 
         <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
           <p className="text-sm text-destructive">
-            Não foi possível carregar os clientes.
+            Não foi possível carregar os pedidos.
           </p>
         </div>
       </PageContainer>
@@ -50,21 +50,19 @@ export function CustomersPage() {
   return (
     <PageContainer>
       <PageHeader
-        title="Clientes"
-        description="Gerencie os clientes da concessionária."
+        title="Pedidos"
+        description="Gerencie os pedidos de motocicletas."
         actions={
           <Button
-            render={
-              <Link to="/clientes/novo" />
-            }
+            render={<Link to="/pedidos/novo" />}
           >
             <Plus />
-            Novo cliente
+            Novo pedido
           </Button>
         }
       />
 
-      <CustomerTable customers={data.customers} />
+      <OrderTable orders={data.orders} />
     </PageContainer>
   )
 }

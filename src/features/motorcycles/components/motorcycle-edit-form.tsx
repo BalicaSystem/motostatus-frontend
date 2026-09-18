@@ -27,16 +27,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from '#/components/ui/select'
+import { useMotorcycle } from '../hooks/use-motorcycle'
 import { useUpdateMotorcycle } from '../hooks/use-update-motorcycle'
 import {
-  motorcycleSchema,
-  type MotorcycleFormData,
+  updateMotorcycleSchema,
+  type UpdateMotorcycleFormData,
 } from '../schemas/motorcycle-schema'
-import { useMotorcycle } from '../hooks/use-motorcycle'
 
 type MotorcycleEditFormProps = {
   motorcycleId: string
 }
+
+const statusLabels = {
+  in_transit: 'Em trânsito',
+  delayed: 'Atrasada',
+  arrived: 'Chegou',
+} as const
 
 export function MotorcycleEditForm({
   motorcycleId,
@@ -45,8 +51,8 @@ export function MotorcycleEditForm({
   const { data, isLoading, isError } = useMotorcycle(motorcycleId)
   const updateMotorcycle = useUpdateMotorcycle()
 
-  const form = useForm<MotorcycleFormData>({
-    resolver: zodResolver(motorcycleSchema),
+  const form = useForm<UpdateMotorcycleFormData>({
+    resolver: zodResolver(updateMotorcycleSchema),
     defaultValues: {
       model: '',
       chassis: '',
@@ -70,7 +76,7 @@ export function MotorcycleEditForm({
     })
   }, [data, form])
 
-  async function onSubmit(values: MotorcycleFormData) {
+  async function onSubmit(values: UpdateMotorcycleFormData) {
     try {
       await updateMotorcycle.mutateAsync({
         id: motorcycleId,
@@ -189,41 +195,35 @@ export function MotorcycleEditForm({
               <FieldLabel>Status</FieldLabel>
 
               <Select
-  value={form.watch('status')}
-  onValueChange={(value) =>
-    form.setValue(
-      'status',
-      value as MotorcycleFormData['status'],
-      {
-        shouldValidate: true,
-      },
-    )
-  }
->
-  <SelectTrigger>
-    <SelectValue>
-      {{
-        in_transit: 'Em trânsito',
-        delayed: 'Atrasada',
-        arrived: 'Chegou',
-      }[form.watch('status')]}
-    </SelectValue>
-  </SelectTrigger>
+                value={form.watch('status')}
+                onValueChange={(value) =>
+                  form.setValue(
+                    'status',
+                    value as UpdateMotorcycleFormData['status'],
+                    {
+                      shouldValidate: true,
+                    },
+                  )
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue>
+                    {statusLabels[form.watch('status')]}
+                  </SelectValue>
+                </SelectTrigger>
 
-  <SelectContent>
-    <SelectItem value="in_transit">
-      Em trânsito
-    </SelectItem>
-
-    <SelectItem value="delayed">
-      Atrasada
-    </SelectItem>
-
-    <SelectItem value="arrived">
-      Chegou
-    </SelectItem>
-  </SelectContent>
-</Select>
+                <SelectContent>
+                  <SelectItem value="in_transit">
+                    Em trânsito
+                  </SelectItem>
+                  <SelectItem value="delayed">
+                    Atrasada
+                  </SelectItem>
+                  <SelectItem value="arrived">
+                    Chegou
+                  </SelectItem>
+                </SelectContent>
+              </Select>
 
               {form.formState.errors.status && (
                 <FieldError>

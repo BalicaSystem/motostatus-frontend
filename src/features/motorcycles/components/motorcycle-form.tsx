@@ -21,16 +21,16 @@ import {
 import { Input } from '#/components/ui/input'
 import { useCreateMotorcycle } from '../hooks/use-create-motorcycle'
 import {
-  motorcycleSchema,
-  type MotorcycleFormData,
+  createMotorcycleSchema,
+  type CreateMotorcycleFormData,
 } from '../schemas/motorcycle-schema'
 
 export function MotorcycleForm() {
   const navigate = useNavigate()
   const createMotorcycle = useCreateMotorcycle()
 
-  const form = useForm<MotorcycleFormData>({
-    resolver: zodResolver(motorcycleSchema),
+  const form = useForm<CreateMotorcycleFormData>({
+    resolver: zodResolver(createMotorcycleSchema),
     defaultValues: {
       model: '',
       chassis: '',
@@ -38,7 +38,7 @@ export function MotorcycleForm() {
     },
   })
 
-  async function onSubmit(data: MotorcycleFormData) {
+  async function onSubmit(data: CreateMotorcycleFormData) {
     try {
       await createMotorcycle.mutateAsync(data)
 
@@ -58,7 +58,7 @@ export function MotorcycleForm() {
       })
     }
   }
-
+  
   return (
     <Card>
       <CardHeader>
