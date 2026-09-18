@@ -13,6 +13,16 @@ export async function api<T>(
   })
 
   if (!response.ok) {
+    const contentType = response.headers.get('content-type')
+
+    if (contentType?.includes('application/json')) {
+      const error = await response.json()
+
+      throw new Error(
+        error.message ?? `API error: ${response.status}`,
+      )
+    }
+
     throw new Error(`API error: ${response.status}`)
   }
 

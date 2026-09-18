@@ -18,6 +18,7 @@ import {
 } from '#/components/ui/table'
 import type { Motorcycle } from '../types/motorcycle'
 import { MotorcycleStatusBadge } from './motorcycle-status-badge'
+import { formatDate } from '#/lib/formatDate'
 
 type MotorcycleTableProps = {
   motorcycles: Motorcycle[]
@@ -61,11 +62,7 @@ export function MotorcycleTable({
               </TableCell>
 
               <TableCell>
-                {motorcycle.estimatedArrival
-                  ? new Intl.DateTimeFormat('pt-BR').format(
-                      new Date(motorcycle.estimatedArrival),
-                    )
-                  : 'Não definida'}
+               {formatDate(motorcycle.estimatedArrival)}
               </TableCell>
 
               <TableCell>

@@ -1,15 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+import { PageContainer } from '#/components/layout/page-container'
+import { PageHeader } from '#/components/layout/page-header'
+import { MotorcycleEditForm } from '#/features/motorcycles/components/motorcycle-edit-form'
+
 export const Route = createFileRoute('/motocicletas/$motorcycleId')({
-  component: MotorcycleDetailsPage,
+  component: EditMotorcyclePage,
 })
 
-function MotorcycleDetailsPage() {
+function EditMotorcyclePage() {
   const { motorcycleId } = Route.useParams()
 
   return (
-    <div>
-      Motocicleta: {motorcycleId}
-    </div>
+    <PageContainer>
+      <PageHeader
+        title="Editar motocicleta"
+        description="Atualize os dados da motocicleta."
+      />
+
+      <MotorcycleEditForm motorcycleId={motorcycleId} />
+    </PageContainer>
   )
 }
