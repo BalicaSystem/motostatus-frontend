@@ -1,5 +1,5 @@
 export type MotorcycleStatus =
-  | 'in-transit'
+  | 'in_transit'
   | 'delayed'
   | 'arrived'
 
@@ -9,6 +9,4 @@ export type Motorcycle = {
   chassis: string
   estimatedArrival: string | null
   status: MotorcycleStatus
-  createdAt: string
-  updatedAt: string
 }

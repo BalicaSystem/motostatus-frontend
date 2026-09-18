@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MotocicletasIndexRouteImport } from './routes/motocicletas/index'
+import { Route as MotocicletasMotorcycleIdRouteImport } from './routes/motocicletas/$motorcycleId'
+import { Route as MotocicletasNovaRouteImport } from './routes/motocicletas/nova'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,30 +24,59 @@ const MotocicletasIndexRoute = MotocicletasIndexRouteImport.update({
   path: '/motocicletas/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MotocicletasMotorcycleIdRoute =
+  MotocicletasMotorcycleIdRouteImport.update({
+    id: '/motocicletas/$motorcycleId',
+    path: '/motocicletas/$motorcycleId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MotocicletasNovaRoute = MotocicletasNovaRouteImport.update({
+  id: '/motocicletas/nova',
+  path: '/motocicletas/nova',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/motocicletas/$motorcycleId': typeof MotocicletasMotorcycleIdRoute
+  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/motocicletas/$motorcycleId': typeof MotocicletasMotorcycleIdRoute
+  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas': typeof MotocicletasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/motocicletas/$motorcycleId': typeof MotocicletasMotorcycleIdRoute
+  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/motocicletas/'
+  fullPaths:
+    | '/'
+    | '/motocicletas/$motorcycleId'
+    | '/motocicletas/nova'
+    | '/motocicletas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/motocicletas'
-  id: '__root__' | '/' | '/motocicletas/'
+  to:
+    '/' | '/motocicletas/$motorcycleId' | '/motocicletas/nova' | '/motocicletas'
+  id:
+    | '__root__'
+    | '/'
+    | '/motocicletas/$motorcycleId'
+    | '/motocicletas/nova'
+    | '/motocicletas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MotocicletasMotorcycleIdRoute: typeof MotocicletasMotorcycleIdRoute
+  MotocicletasNovaRoute: typeof MotocicletasNovaRoute
   MotocicletasIndexRoute: typeof MotocicletasIndexRoute
 }
 
@@ -65,11 +96,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MotocicletasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/motocicletas/$motorcycleId': {
+      id: '/motocicletas/$motorcycleId'
+      path: '/motocicletas/$motorcycleId'
+      fullPath: '/motocicletas/$motorcycleId'
+      preLoaderRoute: typeof MotocicletasMotorcycleIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/motocicletas/nova': {
+      id: '/motocicletas/nova'
+      path: '/motocicletas/nova'
+      fullPath: '/motocicletas/nova'
+      preLoaderRoute: typeof MotocicletasNovaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MotocicletasMotorcycleIdRoute: MotocicletasMotorcycleIdRoute,
+  MotocicletasNovaRoute: MotocicletasNovaRoute,
   MotocicletasIndexRoute: MotocicletasIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL
 
 export async function api<T>(
   path: string,
@@ -10,15 +10,20 @@ export async function api<T>(
       'Content-Type': 'application/json',
       ...options?.headers,
     },
-  });
+  })
 
   if (!response.ok) {
-    throw new Error(`API error: ${response.status}`);
+    throw new Error(`API error: ${response.status}`)
   }
 
-  if (response.status === 204) {
-    return undefined as T;
+  const contentType = response.headers.get('content-type')
+
+  if (
+    response.status === 204 ||
+    !contentType?.includes('application/json')
+  ) {
+    return undefined as T
   }
 
-  return response.json();
+  return response.json()
 }
