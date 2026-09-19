@@ -19,7 +19,7 @@ export function CustomersPage() {
 
   function handlePageChange(nextPage: number) {
     navigate({
-      to: '/clientes/',
+      to: '/clientes',
       search: {
         page: nextPage,
       },

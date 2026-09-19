@@ -39,7 +39,7 @@ export function CustomerCreateForm() {
 				description: "O cliente foi adicionado ao sistema.",
 			});
 
-			await navigate({ to: "/clientes" });
+			await navigate({ to: "/clientes", search: { page: 1 } });
 		} catch (error) {
 			toast.error("Não foi possível cadastrar o cliente", {
 				description:
@@ -103,7 +103,7 @@ export function CustomerCreateForm() {
 						<Button
 							type="button"
 							variant="outline"
-							onClick={() => navigate({ to: "/clientes" })}
+							onClick={() => navigate({ to: "/clientes", search: { page: 1 } })}
 							disabled={createCustomer.isPending}
 						>
 							Cancelar

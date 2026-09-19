@@ -82,7 +82,7 @@ export function CustomerTable({ customers }: CustomerTableProps) {
 										<DropdownMenuItem
 											render={
 												<Link
-													to="/clientes/$customerId"
+													to="/clientes/$customerId/editar"
 													params={{ customerId: customer.id }}
 												/>
 											}

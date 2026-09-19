@@ -61,7 +61,7 @@ export function CustomerEditForm({ customerId }: CustomerEditFormProps) {
 				description: "As alterações foram salvas.",
 			});
 
-			await navigate({ to: "/clientes" });
+			await navigate({ to: "/clientes", search: { page: 1 } });
 		} catch (error) {
 			toast.error("Não foi possível atualizar o cliente", {
 				description:
@@ -140,7 +140,7 @@ export function CustomerEditForm({ customerId }: CustomerEditFormProps) {
 							type="button"
 							variant="outline"
 							disabled={updateCustomer.isPending}
-							onClick={() => navigate({ to: "/clientes" })}
+							onClick={() => navigate({ to: "/clientes", search: { page: 1 } })}
 						>
 							Cancelar
 						</Button>
