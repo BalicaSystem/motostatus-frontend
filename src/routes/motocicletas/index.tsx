@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Plus, QrCode } from "lucide-react";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
@@ -16,9 +16,19 @@ export const Route = createFileRoute("/motocicletas/")({
 });
 
 function MotorcyclesPage() {
-  const { page, setPage } = Route.useSearch()
+  const navigate = useNavigate()
+  const { page } = Route.useSearch()
   const { data, isLoading, isFetching, isError } =
     useMotorcycles(page)
+
+  function handlePageChange(nextPage: number) {
+    navigate({
+      to: "/motocicletas",
+      search: {
+        page: nextPage,
+      },
+    })
+  }
 
   return (
     <PageContainer>
@@ -78,7 +88,7 @@ function MotorcyclesPage() {
             totalPages={data.totalPages}
             total={data.total}
             perPage={data.perPage}
-            onPageChange={setPage}
+            onPageChange={handlePageChange}
           />
         </div>
       )}

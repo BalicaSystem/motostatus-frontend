@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { Plus } from 'lucide-react'
 
 import { PageContainer } from '#/components/layout/page-container'
@@ -11,8 +11,7 @@ import { useCustomers } from '#/features/customers/hooks/use-customers'
 
 export function CustomersPage() {
   const navigate = useNavigate()
-  const search = new URLSearchParams(window.location.search)
-  const page = Number(search.get('page')) || 1
+  const { page } = useSearch({ strict: false })
 
   const { data, isLoading, isFetching, isError } =
     useCustomers(page)
