@@ -90,7 +90,7 @@ export function MotorcycleTable({ motorcycles }: MotorcycleTableProps) {
 										<DropdownMenuItem
 											render={
 												<Link
-													to="/motocicletas/$motorcycleId"
+													to="/motocicletas/$motorcycleId/editar"
 													params={{ motorcycleId: motorcycle.id }}
 												/>
 											}

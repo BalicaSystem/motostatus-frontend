@@ -3,7 +3,7 @@ import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { CustomerEditForm } from "#/features/customers/components/customer-edit-form";
 
-export const Route = createFileRoute("/clientes/$customerId")({
+export const Route = createFileRoute("/clientes/editar")({
 	component: CustomerEditPage,
 });
 
