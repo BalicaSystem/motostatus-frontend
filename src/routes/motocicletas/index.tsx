@@ -1,42 +1,75 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Plus, QrCode } from "lucide-react";
+import { PageContainer } from "#/components/layout/page-container";
+import { PageHeader } from "#/components/layout/page-header";
+import { Button } from "#/components/ui/button";
+import { MotorcyclePagination } from "#/features/motorcycles/components/motorcycle-pagination";
+import { MotorcycleTable } from "#/features/motorcycles/components/motorcycle-table";
+import { useMotorcycles } from "#/features/motorcycles/hooks/use-motorcycles";
 
-import { PageContainer } from '#/components/layout/page-container'
-import { PageHeader } from '#/components/layout/page-header'
-import { useMotorcycles } from '#/features/motorcycles/hooks/use-motorcycles'
-import { MotorcycleTable } from '#/features/motorcycles/components/motorcycle-table'
-import { Button, buttonVariants } from '#/components/ui/button'
-import { Plus } from 'lucide-react'
-
-export const Route = createFileRoute('/motocicletas/')({
-  component: MotorcyclesPage,
-})
+export const Route = createFileRoute("/motocicletas/")({
+	validateSearch: (search) => ({
+		page: Number(search.page) || 1,
+	}),
+	component: MotorcyclesPage,
+});
 
 function MotorcyclesPage() {
-  const { data, isLoading, isError } = useMotorcycles()
+	const navigate = useNavigate();
+	const { page } = Route.useSearch();
+	const { data, isLoading, isError } = useMotorcycles(page);
 
-  return (
-    <PageContainer>
-      <PageHeader
-        title="Motocicletas"
-        description="Gerencie as motocicletas da concessionária."
-        actions={
-          <Link
-            to="/motocicletas/nova"
-            className={buttonVariants()}
-          >
-            <Plus />
-            Nova motocicleta
-          </Link>
-        }
-      />
+	function handlePageChange(nextPage: number) {
+		navigate({
+			to: "/motocicletas",
+			search: { page: nextPage },
+		});
+	}
 
-      {isLoading && <div>Carregando motocicletas...</div>}
+	return (
+		<PageContainer>
+			<PageHeader
+				title="Motocicletas"
+				description="Gerencie as motocicletas da concessionária."
+				actions={
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							nativeButton={false}
+							render={<Link to="/motocicletas/registrar-chegada" />}
+						>
+							<QrCode className="size-4" />
+							Registrar chegada
+						</Button>
 
-      {isError && (
-        <div>Não foi possível carregar as motocicletas.</div>
-      )}
+						<Button
+							nativeButton={false}
+							render={<Link to="/motocicletas/nova" />}
+						>
+							<Plus className="size-4" />
+							Nova motocicleta
+						</Button>
+					</div>
+				}
+			/>
 
-      {data && <MotorcycleTable motorcycles={data.motorcycles} />}
-    </PageContainer>
-  )
+			{isLoading && <div>Carregando motocicletas...</div>}
+
+			{isError && <div>Não foi possível carregar as motocicletas.</div>}
+
+			{data && (
+				<>
+					<MotorcycleTable motorcycles={data.motorcycles} />
+
+					<MotorcyclePagination
+						page={data.page}
+						totalPages={data.totalPages}
+						total={data.total}
+						perPage={data.perPage}
+						onPageChange={handlePageChange}
+					/>
+				</>
+			)}
+		</PageContainer>
+	);
 }

@@ -1,35 +1,35 @@
-import { Badge } from '#/components/ui/badge'
-import type { RegistrationStatus } from '../types/order'
+import { Badge } from "#/components/ui/badge";
+import type { RegistrationStatus } from "../types/order";
 
 const statusConfig = {
-  without_registration: {
-    label: 'Sem emplacamento',
-    variant: 'outline',
-  },
-  registering: {
-    label: 'Emplacando',
-    variant: 'secondary',
-  },
-  registered: {
-    label: 'Emplacado',
-    variant: 'default',
-  },
+	without_registration: {
+		label: "Sem emplacamento",
+		variant: "outline",
+	},
+	registering: {
+		label: "Emplacando",
+		variant: "secondary",
+	},
+	registered: {
+		label: "Emplacado",
+		variant: "default",
+	},
 } satisfies Record<
-  RegistrationStatus,
-  {
-    label: string
-    variant: 'default' | 'secondary' | 'destructive' | 'outline'
-  }
->
+	RegistrationStatus,
+	{
+		label: string;
+		variant: "default" | "secondary" | "destructive" | "outline";
+	}
+>;
 
 type RegistrationStatusBadgeProps = {
-  status: RegistrationStatus
-}
+	status: RegistrationStatus;
+};
 
 export function RegistrationStatusBadge({
-  status,
+	status,
 }: RegistrationStatusBadgeProps) {
-  const config = statusConfig[status]
+	const config = statusConfig[status];
 
-  return <Badge variant={config.variant}>{config.label}</Badge>
+	return <Badge variant={config.variant}>{config.label}</Badge>;
 }

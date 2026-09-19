@@ -1,19 +1,18 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  createCustomer,
-  type CreateCustomerInput,
-} from '../services/customers-service'
+	type CreateCustomerInput,
+	createCustomer,
+} from "../services/customers-service";
 
 export function useCreateCustomer() {
-  const queryClient = useQueryClient()
+	const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (data: CreateCustomerInput) =>
-      createCustomer(data),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['customers'],
-      })
-    },
-  })
+	return useMutation({
+		mutationFn: (data: CreateCustomerInput) => createCustomer(data),
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: ["customers"],
+			});
+		},
+	});
 }
