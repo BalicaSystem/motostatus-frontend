@@ -25,8 +25,10 @@ export type UpdateCustomerInput = {
 	city?: string;
 };
 
-export async function getCustomers() {
-	return api<GetCustomersResponse>("/customers");
+export async function getCustomers(page = 1, perPage = 20) {
+  return api<GetCustomersResponse>(
+    `/customers?page=${page}&perPage=${perPage}`,
+  )
 }
 
 export async function getCustomer(id: string) {

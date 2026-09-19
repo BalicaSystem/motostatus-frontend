@@ -1,6 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { CustomersPage } from "./clientes";
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/clientes/")({
-	component: CustomersPage,
-});
+import { CustomersPage } from './clientes'
+
+export const Route = createFileRoute('/clientes/')({
+  validateSearch: (search) => ({
+    page: Number(search.page) || 1,
+  }),
+  component: CustomersPage,
+})

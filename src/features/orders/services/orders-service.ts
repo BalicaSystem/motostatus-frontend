@@ -8,10 +8,11 @@ export type CreateOrderInput = {
 	motorcycleIds: string[];
 };
 
-export async function getOrders() {
-	return api<GetOrdersResponse>("/orders");
+export async function getOrders(page = 1, perPage = 20) {
+  return api<GetOrdersResponse>(
+    `/orders?page=${page}&perPage=${perPage}`,
+  )
 }
-
 export async function getOrder(id: string) {
 	return api<GetOrderResponse>(`/orders/${id}`);
 }
