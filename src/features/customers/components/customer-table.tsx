@@ -1,4 +1,10 @@
-import { ArrowRight, MoreHorizontal, Trash2, Users } from "lucide-react";
+import {
+	ArrowRight,
+	MoreHorizontal,
+	Pencil,
+	Trash2,
+	Users,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -30,7 +36,7 @@ import type { Customer } from "../types/customer";
 
 type CustomerTableProps = {
 	customers: Customer[];
-	onSelect: (customer: Customer) => void;
+	onSelect: (customer: Customer, mode?: "view" | "edit") => void;
 };
 
 export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
@@ -150,6 +156,7 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 													variant="ghost"
 													size="icon-sm"
 													className="size-7"
+													onClick={(event) => event.stopPropagation()}
 												/>
 											}
 										>
@@ -161,6 +168,13 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 											<DropdownMenuItem onClick={() => onSelect(customer)}>
 												<ArrowRight />
 												Visualizar
+											</DropdownMenuItem>
+
+											<DropdownMenuItem
+												onClick={() => onSelect(customer, "edit")}
+											>
+												<Pencil />
+												Editar
 											</DropdownMenuItem>
 
 											<DropdownMenuItem

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { StatCard } from "#/components/stat-card";
@@ -97,7 +98,7 @@ function DashboardPage() {
 							Registrar chegada
 						</Button>
 
-						<Button render={<Link to="/pedidos/novo" />}>
+						<Button onClick={() => openCreateDrawer("pedido")}>
 							<Plus />
 							Novo pedido
 						</Button>
@@ -259,7 +260,7 @@ function DashboardPage() {
 									Nenhum pedido registrado ainda.
 								</p>
 
-								<Button size="sm" render={<Link to="/pedidos/novo" />}>
+								<Button size="sm" onClick={() => openCreateDrawer("pedido")}>
 									<Plus />
 									Criar primeiro pedido
 								</Button>

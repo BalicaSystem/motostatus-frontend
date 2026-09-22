@@ -1,6 +1,12 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowRight, Bike, ClipboardList, MoreHorizontal } from "lucide-react";
+import {
+	ArrowRight,
+	Bike,
+	ClipboardList,
+	MoreHorizontal,
+	Pencil,
+} from "lucide-react";
 
+import { openCreateDrawer } from "#/components/create-drawers";
 import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import {
@@ -24,7 +30,7 @@ import type { OrderListItem } from "../types/order";
 
 type OrderTableProps = {
 	orders: OrderListItem[];
-	onSelect: (order: OrderListItem) => void;
+	onSelect: (order: OrderListItem, mode?: "view" | "edit") => void;
 };
 
 export function OrderTable({ orders, onSelect }: OrderTableProps) {
@@ -37,7 +43,7 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 					Nenhum pedido registrado ainda.
 				</p>
 
-				<Button size="sm" render={<Link to="/pedidos/novo" />}>
+				<Button size="sm" onClick={() => openCreateDrawer("pedido")}>
 					<ClipboardList className="size-4" />
 					Criar primeiro pedido
 				</Button>
@@ -156,6 +162,7 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 													variant="ghost"
 													size="icon-sm"
 													className="size-7"
+													onClick={(event) => event.stopPropagation()}
 												/>
 											}
 										>
@@ -167,6 +174,11 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 											<DropdownMenuItem onClick={() => onSelect(order)}>
 												<ArrowRight />
 												Visualizar
+											</DropdownMenuItem>
+
+											<DropdownMenuItem onClick={() => onSelect(order, "edit")}>
+												<Pencil />
+												Editar
 											</DropdownMenuItem>
 										</DropdownMenuContent>
 									</DropdownMenu>

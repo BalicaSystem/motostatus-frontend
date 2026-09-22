@@ -29,9 +29,15 @@ type OrderDrawerProps = {
 	orderId: string | null;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	startInEdit?: boolean;
 };
 
-export function OrderDrawer({ orderId, open, onOpenChange }: OrderDrawerProps) {
+export function OrderDrawer({
+	orderId,
+	open,
+	onOpenChange,
+	startInEdit = false,
+}: OrderDrawerProps) {
 	const { data, isLoading } = useOrder(orderId ?? "");
 	const updateOrder = useUpdateOrder();
 	const [editing, setEditing] = useState(false);
@@ -63,10 +69,10 @@ export function OrderDrawer({ orderId, open, onOpenChange }: OrderDrawerProps) {
 	}, [order, form]);
 
 	useEffect(() => {
-		if (open && !editing) {
-			form.reset();
+		if (open) {
+			setEditing(startInEdit);
 		}
-	}, [open, editing, form]);
+	}, [open, startInEdit]);
 
 	async function handleSave(values: OrderEditFormData) {
 		if (!orderId) {

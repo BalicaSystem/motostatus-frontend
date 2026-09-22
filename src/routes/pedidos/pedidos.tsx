@@ -1,7 +1,8 @@
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
@@ -17,10 +18,10 @@ export function OrdersPage() {
 	const navigate = useNavigate();
 	const { page } = useSearch({ strict: false });
 
-	const [selectedOrder, setSelectedOrder] = useState<OrderListItem | null>(
-		null,
-	);
-	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [selection, setSelection] = useState<{
+		order: OrderListItem;
+		mode: "view" | "edit";
+	} | null>(null);
 
 	const { data, isLoading, isPlaceholderData, isError } = useOrders(page);
 
@@ -33,9 +34,11 @@ export function OrdersPage() {
 		});
 	}
 
-	function handleSelectOrder(order: OrderListItem) {
-		setSelectedOrder(order);
-		setDrawerOpen(true);
+	function handleSelectOrder(
+		order: OrderListItem,
+		mode: "view" | "edit" = "view",
+	) {
+		setSelection({ order, mode });
 	}
 
 	return (
@@ -44,7 +47,7 @@ export function OrdersPage() {
 				title="Pedidos"
 				description="Gerencie os pedidos da concessionária."
 				actions={
-					<Button nativeButton={false} render={<Link to="/pedidos/novo" />}>
+					<Button onClick={() => openCreateDrawer("pedido")}>
 						<Plus className="size-4" />
 						Novo pedido
 					</Button>
@@ -80,9 +83,14 @@ export function OrdersPage() {
 			)}
 
 			<OrderDrawer
-				orderId={selectedOrder?.id ?? null}
-				open={drawerOpen}
-				onOpenChange={setDrawerOpen}
+				orderId={selection?.order.id ?? null}
+				open={selection !== null}
+				onOpenChange={(open) => {
+					if (!open) {
+						setSelection(null);
+					}
+				}}
+				startInEdit={selection?.mode === "edit"}
 			/>
 		</PageContainer>
 	);

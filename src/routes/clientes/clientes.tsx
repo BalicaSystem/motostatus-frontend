@@ -1,7 +1,8 @@
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
@@ -17,10 +18,10 @@ export function CustomersPage() {
 	const navigate = useNavigate();
 	const { page } = useSearch({ strict: false });
 
-	const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-		null,
-	);
-	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [selection, setSelection] = useState<{
+		customer: Customer;
+		mode: "view" | "edit";
+	} | null>(null);
 
 	const { data, isLoading, isPlaceholderData, isError } = useCustomers(page);
 
@@ -33,9 +34,11 @@ export function CustomersPage() {
 		});
 	}
 
-	function handleSelectCustomer(customer: Customer) {
-		setSelectedCustomer(customer);
-		setDrawerOpen(true);
+	function handleSelectCustomer(
+		customer: Customer,
+		mode: "view" | "edit" = "view",
+	) {
+		setSelection({ customer, mode });
 	}
 
 	return (
@@ -44,7 +47,7 @@ export function CustomersPage() {
 				title="Clientes"
 				description="Gerencie os clientes da concessionária."
 				actions={
-					<Button nativeButton={false} render={<Link to="/clientes/novo" />}>
+					<Button onClick={() => openCreateDrawer("cliente")}>
 						<Plus className="size-4" />
 						Novo cliente
 					</Button>
@@ -83,9 +86,14 @@ export function CustomersPage() {
 			)}
 
 			<CustomerDrawer
-				customerId={selectedCustomer?.id ?? null}
-				open={drawerOpen}
-				onOpenChange={setDrawerOpen}
+				customerId={selection?.customer.id ?? null}
+				open={selection !== null}
+				onOpenChange={(open) => {
+					if (!open) {
+						setSelection(null);
+					}
+				}}
+				startInEdit={selection?.mode === "edit"}
 			/>
 		</PageContainer>
 	);

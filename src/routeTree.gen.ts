@@ -13,12 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as R404RouteImport } from './routes/404'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClientesIndexRouteImport } from './routes/clientes/index'
-import { Route as ClientesNovoRouteImport } from './routes/clientes/novo'
 import { Route as MotocicletasIndexRouteImport } from './routes/motocicletas/index'
-import { Route as MotocicletasNovaRouteImport } from './routes/motocicletas/nova'
 import { Route as MotocicletasRegistrarChegadaRouteImport } from './routes/motocicletas/registrar-chegada'
 import { Route as PedidosIndexRouteImport } from './routes/pedidos/index'
-import { Route as PedidosNovoRouteImport } from './routes/pedidos/novo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,19 +37,9 @@ const ClientesIndexRoute = ClientesIndexRouteImport.update({
   path: '/clientes/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClientesNovoRoute = ClientesNovoRouteImport.update({
-  id: '/clientes/novo',
-  path: '/clientes/novo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MotocicletasIndexRoute = MotocicletasIndexRouteImport.update({
   id: '/motocicletas/',
   path: '/motocicletas/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MotocicletasNovaRoute = MotocicletasNovaRouteImport.update({
-  id: '/motocicletas/nova',
-  path: '/motocicletas/nova',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MotocicletasRegistrarChegadaRoute =
@@ -66,20 +53,12 @@ const PedidosIndexRoute = PedidosIndexRouteImport.update({
   path: '/pedidos/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PedidosNovoRoute = PedidosNovoRouteImport.update({
-  id: '/pedidos/novo',
-  path: '/pedidos/novo',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
-  '/clientes/novo': typeof ClientesNovoRoute
-  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
@@ -88,10 +67,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
-  '/clientes/novo': typeof ClientesNovoRoute
-  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes': typeof ClientesIndexRoute
   '/motocicletas': typeof MotocicletasIndexRoute
   '/pedidos': typeof PedidosIndexRoute
@@ -101,10 +77,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
-  '/clientes/novo': typeof ClientesNovoRoute
-  '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
@@ -115,10 +88,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/dashboard'
-    | '/clientes/novo'
-    | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/novo'
     | '/clientes/'
     | '/motocicletas/'
     | '/pedidos/'
@@ -127,10 +97,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/dashboard'
-    | '/clientes/novo'
-    | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/novo'
     | '/clientes'
     | '/motocicletas'
     | '/pedidos'
@@ -139,10 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/404'
     | '/dashboard'
-    | '/clientes/novo'
-    | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/novo'
     | '/clientes/'
     | '/motocicletas/'
     | '/pedidos/'
@@ -152,10 +116,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   R404Route: typeof R404Route
   DashboardRoute: typeof DashboardRoute
-  ClientesNovoRoute: typeof ClientesNovoRoute
-  MotocicletasNovaRoute: typeof MotocicletasNovaRoute
   MotocicletasRegistrarChegadaRoute: typeof MotocicletasRegistrarChegadaRoute
-  PedidosNovoRoute: typeof PedidosNovoRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
   MotocicletasIndexRoute: typeof MotocicletasIndexRoute
   PedidosIndexRoute: typeof PedidosIndexRoute
@@ -191,25 +152,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClientesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clientes/novo': {
-      id: '/clientes/novo'
-      path: '/clientes/novo'
-      fullPath: '/clientes/novo'
-      preLoaderRoute: typeof ClientesNovoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/motocicletas/': {
       id: '/motocicletas/'
       path: '/motocicletas'
       fullPath: '/motocicletas/'
       preLoaderRoute: typeof MotocicletasIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/motocicletas/nova': {
-      id: '/motocicletas/nova'
-      path: '/motocicletas/nova'
-      fullPath: '/motocicletas/nova'
-      preLoaderRoute: typeof MotocicletasNovaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/motocicletas/registrar-chegada': {
@@ -226,13 +173,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PedidosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pedidos/novo': {
-      id: '/pedidos/novo'
-      path: '/pedidos/novo'
-      fullPath: '/pedidos/novo'
-      preLoaderRoute: typeof PedidosNovoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -240,10 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   R404Route: R404Route,
   DashboardRoute: DashboardRoute,
-  ClientesNovoRoute: ClientesNovoRoute,
-  MotocicletasNovaRoute: MotocicletasNovaRoute,
   MotocicletasRegistrarChegadaRoute: MotocicletasRegistrarChegadaRoute,
-  PedidosNovoRoute: PedidosNovoRoute,
   ClientesIndexRoute: ClientesIndexRoute,
   MotocicletasIndexRoute: MotocicletasIndexRoute,
   PedidosIndexRoute: PedidosIndexRoute,

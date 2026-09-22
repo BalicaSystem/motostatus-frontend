@@ -31,6 +31,7 @@ type MotorcycleDrawerProps = {
 	motorcycleId: string | null;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	startInEdit?: boolean;
 };
 
 const statusLabels = {
@@ -43,6 +44,7 @@ export function MotorcycleDrawer({
 	motorcycleId,
 	open,
 	onOpenChange,
+	startInEdit = false,
 }: MotorcycleDrawerProps) {
 	const { data, isLoading } = useMotorcycle(motorcycleId ?? "");
 	const updateMotorcycle = useUpdateMotorcycle();
@@ -78,10 +80,10 @@ export function MotorcycleDrawer({
 	}, [motorcycle, form]);
 
 	useEffect(() => {
-		if (open && !editing) {
-			form.reset();
+		if (open) {
+			setEditing(startInEdit);
 		}
-	}, [open, editing, form]);
+	}, [open, startInEdit]);
 
 	async function handleSave(values: UpdateMotorcycleFormData) {
 		if (!motorcycleId) {

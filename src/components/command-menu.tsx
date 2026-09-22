@@ -11,6 +11,7 @@ import {
 	Users,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { openCreateDrawer } from "#/components/create-drawers";
 import { Badge } from "#/components/ui/badge";
 import {
 	Dialog,
@@ -38,6 +39,7 @@ type CommandItem = {
 	params?: Record<string, string>;
 	search?: Record<string, unknown>;
 	keys?: string[];
+	action?: () => void;
 };
 
 const staticCommands: CommandItem[] = [
@@ -78,14 +80,16 @@ const staticCommands: CommandItem[] = [
 		label: "Novo cliente",
 		group: "Ações",
 		icon: Plus,
-		to: "/clientes/novo",
+		to: "",
+		action: () => openCreateDrawer("cliente"),
 	},
 	{
 		id: "nova-motocicleta",
 		label: "Nova motocicleta",
 		group: "Ações",
 		icon: Plus,
-		to: "/motocicletas/nova",
+		to: "",
+		action: () => openCreateDrawer("motocicleta"),
 	},
 	{
 		id: "registrar-chegada",
@@ -100,7 +104,8 @@ const staticCommands: CommandItem[] = [
 		label: "Novo pedido",
 		group: "Ações",
 		icon: Plus,
-		to: "/pedidos/novo",
+		to: "",
+		action: () => openCreateDrawer("pedido"),
 	},
 ];
 
@@ -330,7 +335,13 @@ export function CommandMenu() {
 												linkRefs.current.delete(item.id);
 											}
 										}}
-										onClick={closeMenu}
+										onClick={(event) => {
+											if (item.action) {
+												event.preventDefault();
+												item.action();
+											}
+											closeMenu();
+										}}
 										onMouseEnter={() => setActiveIndex(flatIndex)}
 										className={cn(
 											"flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm",

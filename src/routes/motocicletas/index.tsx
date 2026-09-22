@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Plus, QrCode } from "lucide-react";
 import { useMemo, useState } from "react";
 
+import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { type FilterOption, StatusFilter } from "#/components/status-filter";
@@ -86,10 +87,7 @@ function MotorcyclesPage() {
 							Registrar chegada
 						</Button>
 
-						<Button
-							nativeButton={false}
-							render={<Link to="/motocicletas/nova" />}
-						>
+						<Button onClick={() => openCreateDrawer("motocicleta")}>
 							<Plus className="size-4" />
 							Nova motocicleta
 						</Button>

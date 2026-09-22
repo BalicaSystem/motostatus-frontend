@@ -24,12 +24,14 @@ type CustomerDrawerProps = {
 	customerId: string | null;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	startInEdit?: boolean;
 };
 
 export function CustomerDrawer({
 	customerId,
 	open,
 	onOpenChange,
+	startInEdit = false,
 }: CustomerDrawerProps) {
 	const { data, isLoading } = useCustomer(customerId ?? "");
 	const updateCustomer = useUpdateCustomer();
@@ -59,10 +61,10 @@ export function CustomerDrawer({
 	}, [customer, form]);
 
 	useEffect(() => {
-		if (open && !editing) {
-			form.reset();
+		if (open) {
+			setEditing(startInEdit);
 		}
-	}, [open, editing, form]);
+	}, [open, startInEdit]);
 
 	async function handleSave(values: CustomerFormData) {
 		if (!customerId) {

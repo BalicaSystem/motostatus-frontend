@@ -24,24 +24,12 @@ type Crumb = {
 const rootCrumbs: Record<string, Crumb[]> = {
 	"/dashboard": [{ label: "Dashboard" }],
 	"/clientes": [{ label: "Clientes" }],
-	"/clientes/novo": [
-		{ label: "Clientes", to: "/clientes" },
-		{ label: "Novo cliente" },
-	],
 	"/motocicletas": [{ label: "Motocicletas" }],
-	"/motocicletas/nova": [
-		{ label: "Motocicletas", to: "/motocicletas" },
-		{ label: "Nova motocicleta" },
-	],
 	"/motocicletas/registrar-chegada": [
 		{ label: "Motocicletas", to: "/motocicletas" },
 		{ label: "Registrar chegada" },
 	],
 	"/pedidos": [{ label: "Pedidos" }],
-	"/pedidos/novo": [
-		{ label: "Pedidos", to: "/pedidos" },
-		{ label: "Novo pedido" },
-	],
 };
 
 function useBreadcrumbs(): Crumb[] {

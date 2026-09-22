@@ -4,13 +4,6 @@ import { ClipboardList, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "#/components/ui/card";
 import { Checkbox } from "#/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
@@ -32,7 +25,11 @@ import {
 	orderSchema,
 } from "../schemas/order-schema";
 
-export function OrderCreateForm() {
+type OrderCreateFormProps = {
+	onClose: () => void;
+};
+
+export function OrderCreateForm({ onClose }: OrderCreateFormProps) {
 	const navigate = useNavigate();
 	const createOrder = useCreateOrder();
 
@@ -79,6 +76,8 @@ export function OrderCreateForm() {
 				description: "O pedido foi registrado.",
 			});
 
+			onClose();
+
 			await navigate({ to: "/pedidos", search: { page: 1 } });
 		} catch (error) {
 			toast.error("Não foi possível criar o pedido", {
@@ -90,34 +89,25 @@ export function OrderCreateForm() {
 
 	if (customers.isLoading || motorcycles.isLoading) {
 		return (
-			<div className="mx-auto w-full max-w-3xl">
-				<Card>
-					<CardHeader>
-						<Skeleton className="h-6 w-40" />
-						<Skeleton className="h-4 w-72" />
-					</CardHeader>
+			<div className="space-y-6">
+				<div className="grid gap-6 md:grid-cols-2">
+					<div className="space-y-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-9 w-full" />
+					</div>
 
-					<CardContent className="space-y-6">
-						<div className="grid gap-6 md:grid-cols-2">
-							<div className="space-y-2">
-								<Skeleton className="h-4 w-24" />
-								<Skeleton className="h-9 w-full" />
-							</div>
+					<div className="space-y-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-9 w-full" />
+					</div>
+				</div>
 
-							<div className="space-y-2">
-								<Skeleton className="h-4 w-24" />
-								<Skeleton className="h-9 w-full" />
-							</div>
-						</div>
+				<div className="space-y-2">
+					<Skeleton className="h-4 w-32" />
+					<Skeleton className="h-9 w-full" />
+				</div>
 
-						<div className="space-y-2">
-							<Skeleton className="h-4 w-32" />
-							<Skeleton className="h-9 w-full" />
-						</div>
-
-						<Skeleton className="h-40 w-full" />
-					</CardContent>
-				</Card>
+				<Skeleton className="h-40 w-full" />
 			</div>
 		);
 	}
@@ -137,165 +127,132 @@ export function OrderCreateForm() {
 	}
 
 	return (
-		<div className="mx-auto w-full max-w-3xl">
-			<Card>
-				<CardHeader>
-					<CardTitle>Dados do pedido</CardTitle>
-					<CardDescription>
-						Selecione o cliente, o vendedor e as motocicletas.
-					</CardDescription>
-				</CardHeader>
+		<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+			<div className="grid gap-6 md:grid-cols-2">
+				<Field data-invalid={!!form.formState.errors.customerId}>
+					<FieldLabel>Cliente</FieldLabel>
 
-				<CardContent>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-						<div className="grid gap-6 md:grid-cols-2">
-							<Field data-invalid={!!form.formState.errors.customerId}>
-								<FieldLabel>Cliente</FieldLabel>
+					<Select
+						value={form.watch("customerId")}
+						onValueChange={(value) =>
+							form.setValue("customerId", value ?? "", {
+								shouldValidate: true,
+							})
+						}
+					>
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Selecione o cliente" />
+						</SelectTrigger>
 
-								<Select
-									value={form.watch("customerId")}
-									onValueChange={(value) =>
-										form.setValue("customerId", value ?? "", {
-											shouldValidate: true,
-										})
-									}
+						<SelectContent>
+							{customers.data.customers.map((customer) => (
+								<SelectItem key={customer.id} value={customer.id}>
+									{customer.name} — {customer.document}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+
+					{form.formState.errors.customerId && (
+						<FieldError>{form.formState.errors.customerId.message}</FieldError>
+					)}
+				</Field>
+
+				<Field data-invalid={!!form.formState.errors.seller}>
+					<FieldLabel htmlFor="seller">Vendedor</FieldLabel>
+
+					<Input
+						id="seller"
+						placeholder="Nome do vendedor"
+						{...form.register("seller")}
+					/>
+
+					{form.formState.errors.seller && (
+						<FieldError>{form.formState.errors.seller.message}</FieldError>
+					)}
+				</Field>
+			</div>
+
+			<Field data-invalid={!!form.formState.errors.billingDate}>
+				<FieldLabel htmlFor="billingDate">Data de faturamento</FieldLabel>
+
+				<Input id="billingDate" type="date" {...form.register("billingDate")} />
+
+				{form.formState.errors.billingDate && (
+					<FieldError>{form.formState.errors.billingDate.message}</FieldError>
+				)}
+			</Field>
+
+			<Field data-invalid={!!form.formState.errors.motorcycleIds}>
+				<FieldLabel>Motocicletas</FieldLabel>
+
+				<div className="space-y-1 rounded-lg border p-3">
+					{motorcycles.data.motorcycles.length === 0 ? (
+						<p className="text-sm text-muted-foreground">
+							Nenhuma motocicleta disponível.
+						</p>
+					) : (
+						motorcycles.data.motorcycles.map((motorcycle) => {
+							const checked = selectedMotorcycleIds.includes(motorcycle.id);
+
+							return (
+								<label
+									key={motorcycle.id}
+									htmlFor={`motorcycle-${motorcycle.id}`}
+									className="flex cursor-pointer items-center gap-3 rounded-md p-2 hover:bg-muted"
 								>
-									<SelectTrigger className="w-full">
-										<SelectValue placeholder="Selecione o cliente" />
-									</SelectTrigger>
+									<Checkbox
+										id={`motorcycle-${motorcycle.id}`}
+										checked={checked}
+										onCheckedChange={() => toggleMotorcycle(motorcycle.id)}
+									/>
 
-									<SelectContent>
-										{customers.data.customers.map((customer) => (
-											<SelectItem key={customer.id} value={customer.id}>
-												{customer.name} — {customer.document}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
+									<div className="flex flex-1 items-center justify-between gap-2">
+										<div>
+											<p className="text-sm font-medium">{motorcycle.model}</p>
 
-								{form.formState.errors.customerId && (
-									<FieldError>
-										{form.formState.errors.customerId.message}
-									</FieldError>
-								)}
-							</Field>
+											<p className="font-mono text-xs text-muted-foreground">
+												{motorcycle.chassis}
+											</p>
+										</div>
 
-							<Field data-invalid={!!form.formState.errors.seller}>
-								<FieldLabel htmlFor="seller">Vendedor</FieldLabel>
+										<MotorcycleStatusBadge status={motorcycle.status} />
+									</div>
+								</label>
+							);
+						})
+					)}
+				</div>
 
-								<Input
-									id="seller"
-									placeholder="Nome do vendedor"
-									{...form.register("seller")}
-								/>
+				{form.formState.errors.motorcycleIds && (
+					<FieldError>{form.formState.errors.motorcycleIds.message}</FieldError>
+				)}
+			</Field>
 
-								{form.formState.errors.seller && (
-									<FieldError>
-										{form.formState.errors.seller.message}
-									</FieldError>
-								)}
-							</Field>
-						</div>
+			<div className="flex justify-end gap-2">
+				<Button
+					type="button"
+					variant="outline"
+					disabled={createOrder.isPending}
+					onClick={onClose}
+				>
+					Cancelar
+				</Button>
 
-						<Field data-invalid={!!form.formState.errors.billingDate}>
-							<FieldLabel htmlFor="billingDate">Data de faturamento</FieldLabel>
-
-							<Input
-								id="billingDate"
-								type="date"
-								{...form.register("billingDate")}
-							/>
-
-							{form.formState.errors.billingDate && (
-								<FieldError>
-									{form.formState.errors.billingDate.message}
-								</FieldError>
-							)}
-						</Field>
-
-						<Field data-invalid={!!form.formState.errors.motorcycleIds}>
-							<FieldLabel>Motocicletas</FieldLabel>
-
-							<div className="space-y-1 rounded-lg border p-3">
-								{motorcycles.data.motorcycles.length === 0 ? (
-									<p className="text-sm text-muted-foreground">
-										Nenhuma motocicleta disponível.
-									</p>
-								) : (
-									motorcycles.data.motorcycles.map((motorcycle) => {
-										const checked = selectedMotorcycleIds.includes(
-											motorcycle.id,
-										);
-
-										return (
-											<label
-												key={motorcycle.id}
-												htmlFor={`motorcycle-${motorcycle.id}`}
-												className="flex cursor-pointer items-center gap-3 rounded-md p-2 hover:bg-muted"
-											>
-												<Checkbox
-													id={`motorcycle-${motorcycle.id}`}
-													checked={checked}
-													onCheckedChange={() =>
-														toggleMotorcycle(motorcycle.id)
-													}
-												/>
-
-												<div className="flex flex-1 items-center justify-between gap-2">
-													<div>
-														<p className="text-sm font-medium">
-															{motorcycle.model}
-														</p>
-
-														<p className="font-mono text-xs text-muted-foreground">
-															{motorcycle.chassis}
-														</p>
-													</div>
-
-													<MotorcycleStatusBadge status={motorcycle.status} />
-												</div>
-											</label>
-										);
-									})
-								)}
-							</div>
-
-							{form.formState.errors.motorcycleIds && (
-								<FieldError>
-									{form.formState.errors.motorcycleIds.message}
-								</FieldError>
-							)}
-						</Field>
-
-						<div className="flex justify-end gap-2">
-							<Button
-								type="button"
-								variant="outline"
-								disabled={createOrder.isPending}
-								onClick={() =>
-									navigate({ to: "/pedidos", search: { page: 1 } })
-								}
-							>
-								Cancelar
-							</Button>
-
-							<Button type="submit" disabled={createOrder.isPending}>
-								{createOrder.isPending ? (
-									<>
-										<Loader2 className="animate-spin" />
-										Criando...
-									</>
-								) : (
-									<>
-										<ClipboardList />
-										Criar pedido
-									</>
-								)}
-							</Button>
-						</div>
-					</form>
-				</CardContent>
-			</Card>
-		</div>
+				<Button type="submit" disabled={createOrder.isPending}>
+					{createOrder.isPending ? (
+						<>
+							<Loader2 className="animate-spin" />
+							Criando...
+						</>
+					) : (
+						<>
+							<ClipboardList />
+							Criar pedido
+						</>
+					)}
+				</Button>
+			</div>
+		</form>
 	);
 }
