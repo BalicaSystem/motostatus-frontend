@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import { Loader2, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
@@ -49,74 +50,92 @@ export function CustomerCreateForm() {
 	}
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Dados do cliente</CardTitle>
-				<CardDescription>Informe os dados básicos do cliente.</CardDescription>
-			</CardHeader>
+		<div className="mx-auto w-full max-w-3xl">
+			<Card>
+				<CardHeader>
+					<CardTitle>Dados do cliente</CardTitle>
+					<CardDescription>
+						Informe os dados básicos do cliente.
+					</CardDescription>
+				</CardHeader>
 
-			<CardContent>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-					<div className="grid gap-6 md:grid-cols-2">
-						<Field data-invalid={!!form.formState.errors.name}>
-							<FieldLabel htmlFor="name">Nome</FieldLabel>
+				<CardContent>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						<div className="grid gap-6 md:grid-cols-2">
+							<Field data-invalid={!!form.formState.errors.name}>
+								<FieldLabel htmlFor="name">Nome</FieldLabel>
+
+								<Input
+									id="name"
+									placeholder="Nome completo"
+									{...form.register("name")}
+								/>
+
+								{form.formState.errors.name && (
+									<FieldError>{form.formState.errors.name.message}</FieldError>
+								)}
+							</Field>
+
+							<Field data-invalid={!!form.formState.errors.document}>
+								<FieldLabel htmlFor="document">CPF ou CNPJ</FieldLabel>
+
+								<Input
+									id="document"
+									placeholder="CPF ou CNPJ"
+									{...form.register("document")}
+								/>
+
+								{form.formState.errors.document && (
+									<FieldError>
+										{form.formState.errors.document.message}
+									</FieldError>
+								)}
+							</Field>
+						</div>
+
+						<Field data-invalid={!!form.formState.errors.city}>
+							<FieldLabel htmlFor="city">Cidade</FieldLabel>
 
 							<Input
-								id="name"
-								placeholder="Nome completo"
-								{...form.register("name")}
+								id="city"
+								placeholder="Cidade"
+								{...form.register("city")}
 							/>
 
-							{form.formState.errors.name && (
-								<FieldError>{form.formState.errors.name.message}</FieldError>
+							{form.formState.errors.city && (
+								<FieldError>{form.formState.errors.city.message}</FieldError>
 							)}
 						</Field>
 
-						<Field data-invalid={!!form.formState.errors.document}>
-							<FieldLabel htmlFor="document">CPF ou CNPJ</FieldLabel>
+						<div className="flex justify-end gap-2">
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() =>
+									navigate({ to: "/clientes", search: { page: 1 } })
+								}
+								disabled={createCustomer.isPending}
+							>
+								Cancelar
+							</Button>
 
-							<Input
-								id="document"
-								placeholder="CPF ou CNPJ"
-								{...form.register("document")}
-							/>
-
-							{form.formState.errors.document && (
-								<FieldError>
-									{form.formState.errors.document.message}
-								</FieldError>
-							)}
-						</Field>
-					</div>
-
-					<Field data-invalid={!!form.formState.errors.city}>
-						<FieldLabel htmlFor="city">Cidade</FieldLabel>
-
-						<Input id="city" placeholder="Cidade" {...form.register("city")} />
-
-						{form.formState.errors.city && (
-							<FieldError>{form.formState.errors.city.message}</FieldError>
-						)}
-					</Field>
-
-					<div className="flex justify-end gap-2">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => navigate({ to: "/clientes", search: { page: 1 } })}
-							disabled={createCustomer.isPending}
-						>
-							Cancelar
-						</Button>
-
-						<Button type="submit" disabled={createCustomer.isPending}>
-							{createCustomer.isPending
-								? "Cadastrando..."
-								: "Cadastrar cliente"}
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
+							<Button type="submit" disabled={createCustomer.isPending}>
+								{createCustomer.isPending ? (
+									<>
+										<Loader2 className="animate-spin" />
+										Cadastrando...
+									</>
+								) : (
+									<>
+										<Plus />
+										Cadastrar cliente
+									</>
+								)}
+							</Button>
+						</div>
+					</form>
+				</CardContent>
+			</Card>
+		</div>
 	);
 }

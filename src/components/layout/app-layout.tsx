@@ -1,3 +1,4 @@
+import { CommandMenu } from "#/components/command-menu";
 import { SidebarInset, SidebarProvider } from "#/components/ui/sidebar";
 import { AppHeader } from "./app-header";
 import { AppSidebar } from "./app-sidebar";
@@ -11,6 +12,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 				<AppHeader />
 				{children}
 			</SidebarInset>
+
+			<CommandMenu />
 		</SidebarProvider>
 	);
 }

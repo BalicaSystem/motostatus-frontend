@@ -39,11 +39,14 @@ export function MotorcycleCheckInForm() {
 		},
 	});
 
+	const [successChassis, setSuccessChassis] = useState<string | null>(null);
+
 	async function onSubmit(data: CheckInMotorcycleFormData) {
 		try {
 			await checkInMotorcycle.mutateAsync(data);
 
 			setSuccess(true);
+			setSuccessChassis(data.chassis);
 
 			toast.success("Chegada registrada com sucesso", {
 				description: "A motocicleta foi registrada como recebida no estoque.",
@@ -62,7 +65,7 @@ export function MotorcycleCheckInForm() {
 		return (
 			<Card className="mx-auto w-full max-w-lg">
 				<CardContent className="flex flex-col items-center justify-center gap-4 py-12 text-center">
-					<div className="flex size-12 items-center justify-center rounded-full bg-muted">
+					<div className="flex size-12 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600">
 						<CheckCircle2 className="size-6" />
 					</div>
 
@@ -74,12 +77,19 @@ export function MotorcycleCheckInForm() {
 						</p>
 					</div>
 
+					{successChassis && (
+						<p className="max-w-full truncate rounded-md border bg-muted/40 px-3 py-1.5 font-mono text-xs">
+							{successChassis}
+						</p>
+					)}
+
 					<div className="flex gap-2">
 						<Button
 							type="button"
 							variant="outline"
 							onClick={() => {
 								setSuccess(false);
+								setSuccessChassis(null);
 								form.reset();
 							}}
 						>

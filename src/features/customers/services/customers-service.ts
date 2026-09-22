@@ -30,9 +30,12 @@ export async function getCustomers(
 	perPage = 20,
 	signal?: AbortSignal,
 ) {
-	return api<GetCustomersResponse>(`/customers?page=${page}&perPage=${perPage}`, {
-		signal,
-	});
+	return api<GetCustomersResponse>(
+		`/customers?page=${page}&perPage=${perPage}`,
+		{
+			signal,
+		},
+	);
 }
 
 export async function getCustomer(id: string, signal?: AbortSignal) {

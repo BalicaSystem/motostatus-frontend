@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, MoreHorizontal, Pencil } from "lucide-react";
+import { Bike, Eye, MoreHorizontal, Pencil } from "lucide-react";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -27,10 +27,21 @@ type MotorcycleTableProps = {
 export function MotorcycleTable({ motorcycles }: MotorcycleTableProps) {
 	if (motorcycles.length === 0) {
 		return (
-			<div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
+			<div className="flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed px-6 py-10 text-center">
+				<Bike className="size-8 text-muted-foreground" />
+
 				<p className="text-sm text-muted-foreground">
 					Nenhuma motocicleta encontrada.
 				</p>
+
+				<Button
+					variant="outline"
+					size="sm"
+					render={<Link to="/motocicletas/nova" />}
+				>
+					<Bike className="size-4" />
+					Cadastrar motocicleta
+				</Button>
 			</div>
 		);
 	}
@@ -51,7 +62,15 @@ export function MotorcycleTable({ motorcycles }: MotorcycleTableProps) {
 				<TableBody>
 					{motorcycles.map((motorcycle) => (
 						<TableRow key={motorcycle.id}>
-							<TableCell className="font-medium">{motorcycle.model}</TableCell>
+							<TableCell>
+								<div className="flex items-center gap-3">
+									<span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+										<Bike className="size-4" />
+									</span>
+
+									<span className="font-medium">{motorcycle.model}</span>
+								</div>
+							</TableCell>
 
 							<TableCell className="font-mono text-sm">
 								{motorcycle.chassis}

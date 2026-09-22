@@ -24,11 +24,7 @@ export type UpdateOrderItemInput = {
 	registrationDate?: string | null;
 };
 
-export async function getOrders(
-	page = 1,
-	perPage = 20,
-	signal?: AbortSignal,
-) {
+export async function getOrders(page = 1, perPage = 20, signal?: AbortSignal) {
 	return api<GetOrdersResponse>(`/orders?page=${page}&perPage=${perPage}`, {
 		signal,
 	});

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -8,6 +8,7 @@ import {
 	AlertDialogPopup,
 	AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import {
 	DropdownMenu,
@@ -23,6 +24,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "#/components/ui/table";
+import { getInitials } from "#/lib/utils";
 import { useDeleteCustomer } from "../hooks/use-delete-customer";
 import type { Customer } from "../types/customer";
 
@@ -59,10 +61,21 @@ export function CustomerTable({ customers }: CustomerTableProps) {
 
 	if (customers.length === 0) {
 		return (
-			<div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
+			<div className="flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed px-6 py-10 text-center">
+				<Users className="size-8 text-muted-foreground" />
+
 				<p className="text-sm text-muted-foreground">
-					Nenhum cliente encontrado.
+					Nenhum cliente cadastrado ainda.
 				</p>
+
+				<Button
+					variant="outline"
+					size="sm"
+					render={<Link to="/clientes/novo" />}
+				>
+					<Users className="size-4" />
+					Cadastrar primeiro cliente
+				</Button>
 			</div>
 		);
 	}
@@ -82,7 +95,17 @@ export function CustomerTable({ customers }: CustomerTableProps) {
 				<TableBody>
 					{customers.map((customer) => (
 						<TableRow key={customer.id}>
-							<TableCell className="font-medium">{customer.name}</TableCell>
+							<TableCell>
+								<div className="flex items-center gap-3">
+									<Avatar>
+										<AvatarFallback className="bg-primary/10 text-primary">
+											{getInitials(customer.name)}
+										</AvatarFallback>
+									</Avatar>
+
+									<span className="font-medium">{customer.name}</span>
+								</div>
+							</TableCell>
 
 							<TableCell className="font-mono text-sm">
 								{customer.document}

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -13,12 +13,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/ui/card";
-import {
-	Field,
-	FieldError,
-	FieldGroup,
-	FieldLabel,
-} from "#/components/ui/field";
+import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import {
 	Select,
@@ -27,6 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "#/components/ui/select";
+import { Skeleton } from "#/components/ui/skeleton";
 import { useMotorcycle } from "../hooks/use-motorcycle";
 import { useUpdateMotorcycle } from "../hooks/use-update-motorcycle";
 import {
@@ -111,11 +107,38 @@ export function MotorcycleEditForm({ motorcycleId }: MotorcycleEditFormProps) {
 
 	if (isLoading) {
 		return (
-			<Card>
-				<CardContent className="flex min-h-48 items-center justify-center">
-					<Loader2 className="size-5 animate-spin" />
-				</CardContent>
-			</Card>
+			<div className="mx-auto w-full max-w-3xl">
+				<Card>
+					<CardHeader>
+						<Skeleton className="h-6 w-48" />
+						<Skeleton className="h-4 w-72" />
+					</CardHeader>
+
+					<CardContent className="space-y-6">
+						<div className="grid gap-6 md:grid-cols-2">
+							<div className="space-y-2">
+								<Skeleton className="h-4 w-20" />
+								<Skeleton className="h-9 w-full" />
+							</div>
+
+							<div className="space-y-2">
+								<Skeleton className="h-4 w-20" />
+								<Skeleton className="h-9 w-full" />
+							</div>
+						</div>
+
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-32" />
+							<Skeleton className="h-9 w-full" />
+						</div>
+
+						<div className="space-y-2">
+							<Skeleton className="h-4 w-16" />
+							<Skeleton className="h-9 w-full" />
+						</div>
+					</CardContent>
+				</Card>
+			</div>
 		);
 	}
 
@@ -132,44 +155,48 @@ export function MotorcycleEditForm({ motorcycleId }: MotorcycleEditFormProps) {
 	}
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>Dados da motocicleta</CardTitle>
-				<CardDescription>
-					Altere os dados da motocicleta e salve as alterações.
-				</CardDescription>
-			</CardHeader>
+		<div className="mx-auto w-full max-w-3xl">
+			<Card>
+				<CardHeader>
+					<CardTitle>Dados da motocicleta</CardTitle>
+					<CardDescription>
+						Altere os dados da motocicleta e salve as alterações.
+					</CardDescription>
+				</CardHeader>
 
-			<CardContent>
-				<form onSubmit={form.handleSubmit(onSubmit)}>
-					<FieldGroup>
-						<Field data-invalid={!!form.formState.errors.model}>
-							<FieldLabel htmlFor="model">Modelo</FieldLabel>
+				<CardContent>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+						<div className="grid gap-6 md:grid-cols-2">
+							<Field data-invalid={!!form.formState.errors.model}>
+								<FieldLabel htmlFor="model">Modelo</FieldLabel>
 
-							<Input
-								id="model"
-								placeholder="Ex.: Honda CG 160"
-								{...form.register("model")}
-							/>
+								<Input
+									id="model"
+									placeholder="Ex.: Honda CG 160"
+									{...form.register("model")}
+								/>
 
-							{form.formState.errors.model && (
-								<FieldError>{form.formState.errors.model.message}</FieldError>
-							)}
-						</Field>
+								{form.formState.errors.model && (
+									<FieldError>{form.formState.errors.model.message}</FieldError>
+								)}
+							</Field>
 
-						<Field data-invalid={!!form.formState.errors.chassis}>
-							<FieldLabel htmlFor="chassis">Chassi</FieldLabel>
+							<Field data-invalid={!!form.formState.errors.chassis}>
+								<FieldLabel htmlFor="chassis">Chassi</FieldLabel>
 
-							<Input
-								id="chassis"
-								placeholder="Informe o chassi"
-								{...form.register("chassis")}
-							/>
+								<Input
+									id="chassis"
+									placeholder="Informe o chassi"
+									{...form.register("chassis")}
+								/>
 
-							{form.formState.errors.chassis && (
-								<FieldError>{form.formState.errors.chassis.message}</FieldError>
-							)}
-						</Field>
+								{form.formState.errors.chassis && (
+									<FieldError>
+										{form.formState.errors.chassis.message}
+									</FieldError>
+								)}
+							</Field>
+						</div>
 
 						<Field data-invalid={!!form.formState.errors.estimatedArrival}>
 							<FieldLabel htmlFor="estimatedArrival">
@@ -244,13 +271,16 @@ export function MotorcycleEditForm({ motorcycleId }: MotorcycleEditFormProps) {
 										Salvando...
 									</>
 								) : (
-									"Salvar alterações"
+									<>
+										<Save />
+										Salvar alterações
+									</>
 								)}
 							</Button>
 						</div>
-					</FieldGroup>
-				</form>
-			</CardContent>
-		</Card>
+					</form>
+				</CardContent>
+			</Card>
+		</div>
 	);
 }

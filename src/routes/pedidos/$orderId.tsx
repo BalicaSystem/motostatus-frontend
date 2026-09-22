@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Bike, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DetailField, DetailList } from "#/components/detail-field";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import {
@@ -10,6 +11,7 @@ import {
 	AlertDialogPopup,
 	AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import {
 	Card,
@@ -18,6 +20,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/ui/card";
+import { Separator } from "#/components/ui/separator";
 import { Skeleton } from "#/components/ui/skeleton";
 import {
 	Table,
@@ -33,6 +36,7 @@ import { useDeleteOrder } from "#/features/orders/hooks/use-delete-order";
 import { useOrder } from "#/features/orders/hooks/use-order";
 import { formatDate } from "#/lib/formatDate";
 import { formatDateTime } from "#/lib/formatDateTime";
+import { getInitials } from "#/lib/utils";
 
 export const Route = createFileRoute("/pedidos/$orderId")({
 	component: OrderDetailPage,
@@ -144,12 +148,48 @@ function OrderDetailPage() {
 						<CardDescription>Dados do cliente do pedido</CardDescription>
 					</CardHeader>
 
-					<CardContent className="space-y-1 text-sm">
-						<p className="font-medium">{order.customer.name}</p>
-						<p className="font-mono text-muted-foreground">
-							{order.customer.document}
-						</p>
-						<p className="text-muted-foreground">{order.customer.city}</p>
+					<CardContent>
+						<div className="flex items-center gap-4 pb-5">
+							<Avatar size="lg">
+								<AvatarFallback className="text-lg">
+									{getInitials(order.customer.name)}
+								</AvatarFallback>
+							</Avatar>
+
+							<div className="min-w-0">
+								<p className="text-base font-semibold">{order.customer.name}</p>
+
+								<p className="font-mono text-sm text-muted-foreground">
+									{order.customer.document}
+								</p>
+
+								<p className="text-sm text-muted-foreground">
+									{order.customer.city}
+								</p>
+							</div>
+						</div>
+
+						<Separator className="mb-5" />
+
+						<DetailList>
+							<DetailField
+								label="CPF/CNPJ"
+								mono
+								copyValue={order.customer.document}
+								copyLabel="CPF/CNPJ copiado"
+							>
+								{order.customer.document}
+							</DetailField>
+
+							<DetailField
+								label="ID do pedido"
+								mono
+								copyValue={order.id}
+								copyLabel="ID do pedido copiado"
+							>
+								{order.id}
+							</DetailField>
+						</DetailList>
 					</CardContent>
 				</Card>
 
@@ -159,25 +199,18 @@ function OrderDetailPage() {
 						<CardDescription>Dados gerais do pedido</CardDescription>
 					</CardHeader>
 
-					<CardContent className="space-y-2 text-sm">
-						<div className="flex justify-between">
-							<span className="text-muted-foreground">Vendedor</span>
-							<span className="font-medium">{order.seller}</span>
-						</div>
+					<CardContent>
+						<DetailList className="sm:grid-cols-1">
+							<DetailField label="Vendedor">{order.seller}</DetailField>
 
-						<div className="flex justify-between">
-							<span className="text-muted-foreground">Faturamento</span>
-							<span className="font-medium">
+							<DetailField label="Faturamento">
 								{formatDate(order.billingDate)}
-							</span>
-						</div>
+							</DetailField>
 
-						<div className="flex justify-between">
-							<span className="text-muted-foreground">Criado em</span>
-							<span className="font-medium">
+							<DetailField label="Criado em">
 								{formatDateTime(order.createdAt)}
-							</span>
-						</div>
+							</DetailField>
+						</DetailList>
 					</CardContent>
 				</Card>
 			</div>

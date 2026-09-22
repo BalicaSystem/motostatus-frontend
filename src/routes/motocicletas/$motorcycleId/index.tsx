@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeft, Bike, Pencil } from "lucide-react";
 
+import { DetailField, DetailList } from "#/components/detail-field";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { Button } from "#/components/ui/button";
@@ -98,35 +99,41 @@ function MotorcycleDetailsPage() {
 						</CardDescription>
 					</CardHeader>
 
-					<CardContent className="space-y-5">
-						<div>
-							<p className="text-sm text-muted-foreground">Modelo</p>
-							<p className="font-medium">{motorcycle.model}</p>
-						</div>
+					<CardContent>
+						<div className="flex items-center gap-4 pb-5">
+							<div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+								<Bike className="size-6" />
+							</div>
 
-						<div>
-							<p className="text-sm text-muted-foreground">Chassi</p>
-							<p className="font-mono text-sm">{motorcycle.chassis}</p>
-						</div>
+							<div className="min-w-0 space-y-1">
+								<p className="text-base font-semibold">{motorcycle.model}</p>
 
-						<Separator />
-
-						<div>
-							<p className="text-sm text-muted-foreground">
-								Previsão de chegada
-							</p>
-							<p className="font-medium">
-								{formatDate(motorcycle.estimatedArrival)}
-							</p>
-						</div>
-
-						<div>
-							<p className="text-sm text-muted-foreground">Status</p>
-
-							<div className="pt-1">
 								<MotorcycleStatusBadge status={motorcycle.status} />
 							</div>
 						</div>
+
+						<Separator className="mb-5" />
+
+						<DetailList>
+							<DetailField label="Modelo">{motorcycle.model}</DetailField>
+
+							<DetailField
+								label="Chassi"
+								mono
+								copyValue={motorcycle.chassis}
+								copyLabel="Chassi copiado"
+							>
+								{motorcycle.chassis}
+							</DetailField>
+
+							<DetailField label="Previsão de chegada">
+								{formatDate(motorcycle.estimatedArrival)}
+							</DetailField>
+
+							<DetailField label="Status">
+								<MotorcycleStatusBadge status={motorcycle.status} />
+							</DetailField>
+						</DetailList>
 					</CardContent>
 				</Card>
 
@@ -138,26 +145,27 @@ function MotorcycleDetailsPage() {
 						</CardDescription>
 					</CardHeader>
 
-					<CardContent>
-						<div className="space-y-6">
-							<div className="flex items-start gap-3">
-								<div className="mt-1 size-2 rounded-full bg-primary" />
+					<CardContent className="space-y-6">
+						<div className="flex items-start gap-3">
+							<div className="mt-2 size-2 rounded-full bg-primary" />
 
-								<div>
-									<p className="font-medium">Status atual</p>
-									<p className="text-sm text-muted-foreground">
-										<MotorcycleStatusBadge status={motorcycle.status} />
-									</p>
-								</div>
-							</div>
+							<div className="space-y-1">
+								<p className="font-medium">Status atual</p>
 
-							<Separator />
-
-							<div>
-								<p className="text-sm text-muted-foreground">Identificador</p>
-								<p className="break-all font-mono text-xs">{motorcycle.id}</p>
+								<MotorcycleStatusBadge status={motorcycle.status} />
 							</div>
 						</div>
+
+						<Separator />
+
+						<DetailField
+							label="Identificador"
+							mono
+							copyValue={motorcycle.id}
+							copyLabel="Identificador copiado"
+						>
+							{motorcycle.id}
+						</DetailField>
 					</CardContent>
 				</Card>
 			</div>

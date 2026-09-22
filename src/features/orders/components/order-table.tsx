@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, MoreHorizontal, Pencil } from "lucide-react";
+import { ClipboardList, Eye, MoreHorizontal, Pencil } from "lucide-react";
 
+import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import {
 	DropdownMenu,
@@ -18,6 +19,7 @@ import {
 } from "#/components/ui/table";
 import { formatDate } from "#/lib/formatDate";
 import { formatDateTime } from "#/lib/formatDateTime";
+import { getInitials } from "#/lib/utils";
 import type { OrderListItem } from "../types/order";
 
 type OrderTableProps = {
@@ -27,10 +29,17 @@ type OrderTableProps = {
 export function OrderTable({ orders }: OrderTableProps) {
 	if (orders.length === 0) {
 		return (
-			<div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
+			<div className="flex min-h-40 flex-col items-center justify-center gap-3 rounded-lg border border-dashed px-6 py-10 text-center">
+				<ClipboardList className="size-8 text-muted-foreground" />
+
 				<p className="text-sm text-muted-foreground">
-					Nenhum pedido encontrado.
+					Nenhum pedido registrado ainda.
 				</p>
+
+				<Button size="sm" render={<Link to="/pedidos/novo" />}>
+					<ClipboardList className="size-4" />
+					Criar primeiro pedido
+				</Button>
 			</div>
 		);
 	}
@@ -53,12 +62,20 @@ export function OrderTable({ orders }: OrderTableProps) {
 					{orders.map((order) => (
 						<TableRow key={order.id}>
 							<TableCell>
-								<div>
-									<p className="font-medium">{order.customer.name}</p>
+								<div className="flex items-center gap-3">
+									<Avatar>
+										<AvatarFallback className="bg-primary/10 text-primary">
+											{getInitials(order.customer.name)}
+										</AvatarFallback>
+									</Avatar>
 
-									<p className="text-xs text-muted-foreground">
-										{order.customer.document}
-									</p>
+									<div>
+										<p className="font-medium">{order.customer.name}</p>
+
+										<p className="text-xs text-muted-foreground">
+											{order.customer.document}
+										</p>
+									</div>
 								</div>
 							</TableCell>
 

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DetailField, DetailList } from "#/components/detail-field";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import {
@@ -10,6 +11,7 @@ import {
 	AlertDialogPopup,
 	AlertDialogTitle,
 } from "#/components/ui/alert-dialog";
+import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
 import {
 	Card,
@@ -23,6 +25,7 @@ import { Skeleton } from "#/components/ui/skeleton";
 import { useCustomer } from "#/features/customers/hooks/use-customer";
 import { useDeleteCustomer } from "#/features/customers/hooks/use-delete-customer";
 import { formatDateTime } from "#/lib/formatDateTime";
+import { getInitials } from "#/lib/utils";
 
 export const Route = createFileRoute("/clientes/$customerId/")({
 	component: CustomerDetailsPage,
@@ -138,39 +141,43 @@ function CustomerDetailsPage() {
 						</CardDescription>
 					</CardHeader>
 
-					<CardContent className="space-y-5">
-						<div>
-							<p className="text-sm text-muted-foreground">Nome</p>
-							<p className="font-medium">{customer.name}</p>
+					<CardContent>
+						<div className="flex items-center gap-4 pb-5">
+							<Avatar size="lg">
+								<AvatarFallback className="text-lg">
+									{getInitials(customer.name)}
+								</AvatarFallback>
+							</Avatar>
+
+							<div className="min-w-0">
+								<p className="text-base font-semibold">{customer.name}</p>
+
+								<p className="text-sm text-muted-foreground">{customer.city}</p>
+							</div>
 						</div>
 
-						<div>
-							<p className="text-sm text-muted-foreground">CPF/CNPJ</p>
-							<p className="font-mono text-sm">{customer.document}</p>
-						</div>
+						<Separator className="mb-5" />
 
-						<div>
-							<p className="text-sm text-muted-foreground">Cidade</p>
-							<p className="font-medium">{customer.city}</p>
-						</div>
+						<DetailList>
+							<DetailField
+								label="CPF/CNPJ"
+								mono
+								copyValue={customer.document}
+								copyLabel="CPF/CNPJ copiado"
+							>
+								{customer.document}
+							</DetailField>
 
-						<Separator />
+							<DetailField label="Cidade">{customer.city}</DetailField>
 
-						<div>
-							<p className="text-sm text-muted-foreground">Cadastrado em</p>
-							<p className="font-medium">
+							<DetailField label="Cadastrado em">
 								{formatDateTime(customer.createdAt)}
-							</p>
-						</div>
+							</DetailField>
 
-						<div>
-							<p className="text-sm text-muted-foreground">
-								Última atualização
-							</p>
-							<p className="font-medium">
+							<DetailField label="Última atualização">
 								{formatDateTime(customer.updatedAt)}
-							</p>
-						</div>
+							</DetailField>
+						</DetailList>
 					</CardContent>
 				</Card>
 
@@ -181,10 +188,16 @@ function CustomerDetailsPage() {
 					</CardHeader>
 
 					<CardContent>
-						<div>
-							<p className="text-sm text-muted-foreground">ID do cliente</p>
-							<p className="break-all font-mono text-xs">{customer.id}</p>
-						</div>
+						<DetailList className="sm:grid-cols-1">
+							<DetailField
+								label="ID do cliente"
+								mono
+								copyValue={customer.id}
+								copyLabel="ID do cliente copiado"
+							>
+								{customer.id}
+							</DetailField>
+						</DetailList>
 					</CardContent>
 				</Card>
 			</div>

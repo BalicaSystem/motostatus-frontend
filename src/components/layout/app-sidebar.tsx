@@ -54,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton size="lg" render={<Link to="/dashboard" />}>
-							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+							<div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-sm ring-1 ring-ring/50">
 								<Bike className="size-4" />
 							</div>
 
@@ -80,12 +80,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton
 											tooltip={item.title}
+											className="transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground"
 											render={
 												<Link
 													to={item.url}
 													activeProps={{
 														className:
-															"bg-sidebar-accent text-sidebar-accent-foreground",
+															"bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-sm",
 													}}
 												/>
 											}
