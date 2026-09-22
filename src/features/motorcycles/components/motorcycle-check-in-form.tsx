@@ -80,7 +80,7 @@ export function MotorcycleCheckInForm() {
 						</p>
 					)}
 
-					<div className="flex gap-2">
+					<div className="flex flex-wrap justify-center gap-2">
 						<Button
 							type="button"
 							variant="outline"

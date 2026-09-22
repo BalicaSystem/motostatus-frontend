@@ -1,5 +1,19 @@
-import { ArrowUpRight, Bike } from "lucide-react";
+import {
+	ArrowRight,
+	ArrowUpRight,
+	Bike,
+	MoreHorizontal,
+	Pencil,
+	Trash2,
+} from "lucide-react";
 
+import { Button } from "#/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "#/components/ui/dropdown-menu";
 import { formatDate } from "#/lib/formatDate";
 import type { Motorcycle } from "../types/motorcycle";
 import { MotorcycleStatusBadge } from "./motorcycle-status-badge";
@@ -7,11 +21,15 @@ import { MotorcycleStatusBadge } from "./motorcycle-status-badge";
 type MotorcycleCardGridProps = {
 	motorcycles: Motorcycle[];
 	onSelect: (motorcycle: Motorcycle) => void;
+	onEdit: (motorcycle: Motorcycle) => void;
+	onDeleteRequest: (motorcycle: Motorcycle) => void;
 };
 
 export function MotorcycleCardGrid({
 	motorcycles,
 	onSelect,
+	onEdit,
+	onDeleteRequest,
 }: MotorcycleCardGridProps) {
 	if (motorcycles.length === 0) {
 		return (
@@ -28,14 +46,16 @@ export function MotorcycleCardGrid({
 	return (
 		<div className="grid grid-cols-1 gap-3 lg:grid-cols-2 xl:grid-cols-3">
 			{motorcycles.map((motorcycle) => (
-				<button
-					type="button"
+				<div
 					key={motorcycle.id}
-					className="group rounded-lg border border-border bg-card p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/[0.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-					onClick={() => onSelect(motorcycle)}
+					className="group rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-primary/[0.03]"
 				>
 					<div className="flex items-start justify-between gap-3">
-						<div className="flex min-w-0 items-center gap-3">
+						<button
+							type="button"
+							className="flex min-w-0 items-center gap-3 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+							onClick={() => onSelect(motorcycle)}
+						>
 							<span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
 								<Bike className="size-5" />
 							</span>
@@ -49,12 +69,53 @@ export function MotorcycleCardGrid({
 									Unidade {motorcycle.id}
 								</p>
 							</div>
-						</div>
+						</button>
 
-						<MotorcycleStatusBadge status={motorcycle.status} />
+						<div className="flex shrink-0 items-center gap-1">
+							<MotorcycleStatusBadge status={motorcycle.status} />
+
+							<DropdownMenu>
+								<DropdownMenuTrigger
+									render={
+										<Button
+											variant="ghost"
+											size="icon-sm"
+											className="size-7 text-muted-foreground hover:bg-primary/10 hover:text-primary"
+										/>
+									}
+								>
+									<MoreHorizontal className="size-4" />
+									<span className="sr-only">Ações da motocicleta</span>
+								</DropdownMenuTrigger>
+
+								<DropdownMenuContent align="end">
+									<DropdownMenuItem onClick={() => onSelect(motorcycle)}>
+										<ArrowRight />
+										Visualizar
+									</DropdownMenuItem>
+
+									<DropdownMenuItem onClick={() => onEdit(motorcycle)}>
+										<Pencil />
+										Editar
+									</DropdownMenuItem>
+
+									<DropdownMenuItem
+										variant="destructive"
+										onClick={() => onDeleteRequest(motorcycle)}
+									>
+										<Trash2 />
+										Excluir
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
 					</div>
 
-					<div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4">
+					<button
+						type="button"
+						className="mt-4 grid w-full grid-cols-2 gap-3 border-t border-border pt-4 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+						onClick={() => onSelect(motorcycle)}
+					>
 						<div className="col-span-2">
 							<p className="font-mono text-[0.6rem] tracking-[0.12em] text-muted-foreground uppercase">
 								Chassi
@@ -76,13 +137,13 @@ export function MotorcycleCardGrid({
 						</div>
 
 						<div className="flex items-end justify-end">
-							<span className="flex items-center gap-1 font-mono text-[0.6rem] tracking-[0.12em] text-primary uppercase opacity-0 transition-opacity group-hover:opacity-100">
+							<span className="flex items-center gap-1 font-mono text-[0.6rem] tracking-[0.12em] text-primary uppercase opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100">
 								Abrir
 								<ArrowUpRight className="size-3.5" />
 							</span>
 						</div>
-					</div>
-				</button>
+					</button>
+				</div>
 			))}
 		</div>
 	);

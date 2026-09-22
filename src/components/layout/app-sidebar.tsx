@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Bike, ClipboardList, LayoutDashboard, Users } from "lucide-react";
+import {
+	Bike,
+	ClipboardList,
+	LayoutDashboard,
+	QrCode,
+	Users,
+} from "lucide-react";
 
 import {
 	Sidebar,
@@ -42,6 +48,11 @@ const navigation = [
 				title: "Pedidos",
 				url: "/pedidos",
 				icon: ClipboardList,
+			},
+			{
+				title: "Registrar chegada",
+				url: "/motocicletas/registrar-chegada",
+				icon: QrCode,
 			},
 		],
 	},

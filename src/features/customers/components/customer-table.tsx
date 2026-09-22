@@ -87,11 +87,11 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 							Cliente
 						</TableHead>
 
-						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+						<TableHead className="hidden font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase sm:table-cell">
 							CPF/CNPJ
 						</TableHead>
 
-						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+						<TableHead className="hidden font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase md:table-cell">
 							Cidade
 						</TableHead>
 
@@ -106,7 +106,7 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 							className="group cursor-pointer transition-colors hover:bg-primary/[0.04]"
 							onClick={() => onSelect(customer)}
 						>
-							<TableCell>
+							<TableCell className="max-w-[200px]">
 								<div className="flex items-center gap-3">
 									<Avatar className="rounded-full bg-primary/15">
 										<AvatarFallback className="bg-transparent font-display text-xs font-bold text-primary">
@@ -126,11 +126,11 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 								</div>
 							</TableCell>
 
-							<TableCell className="font-mono text-sm tracking-wide text-muted-foreground">
+							<TableCell className="hidden font-mono text-sm tracking-wide text-muted-foreground sm:table-cell">
 								{customer.document}
 							</TableCell>
 
-							<TableCell className="text-sm text-secondary-foreground">
+							<TableCell className="hidden text-sm text-secondary-foreground md:table-cell">
 								{customer.city}
 							</TableCell>
 

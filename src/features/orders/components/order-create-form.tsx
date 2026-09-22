@@ -207,15 +207,17 @@ export function OrderCreateForm({ onClose }: OrderCreateFormProps) {
 										onCheckedChange={() => toggleMotorcycle(motorcycle.id)}
 									/>
 
-									<div className="flex flex-1 items-center justify-between gap-2">
-										<div>
-											<p className="text-sm font-medium">{motorcycle.model}</p>
+									<div className="min-w-0 flex-1">
+										<p className="truncate text-sm font-medium">
+											{motorcycle.model}
+										</p>
 
-											<p className="font-mono text-xs text-muted-foreground">
-												{motorcycle.chassis}
-											</p>
-										</div>
+										<p className="truncate font-mono text-xs text-muted-foreground">
+											{motorcycle.chassis}
+										</p>
+									</div>
 
+									<div className="shrink-0">
 										<MotorcycleStatusBadge status={motorcycle.status} />
 									</div>
 								</label>
@@ -229,7 +231,7 @@ export function OrderCreateForm({ onClose }: OrderCreateFormProps) {
 				)}
 			</Field>
 
-			<div className="flex justify-end gap-2">
+			<div className="flex flex-wrap justify-end gap-2">
 				<Button
 					type="button"
 					variant="outline"

@@ -139,7 +139,7 @@ function DashboardPage() {
 
 			<div className="grid gap-4 lg:grid-cols-3">
 				<Card className="lg:col-span-2">
-					<CardHeader className="flex flex-row items-center justify-between gap-4">
+					<CardHeader className="flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
 						<CardTitle className="font-display text-lg font-bold tracking-[0.04em] uppercase">
 							Chegadas recentes
 						</CardTitle>
@@ -195,7 +195,7 @@ function DashboardPage() {
 											className="cursor-pointer transition-colors hover:bg-primary/[0.04]"
 											onClick={() => handleMotorcycleSelect(motorcycle)}
 										>
-											<TableCell>
+											<TableCell className="max-w-[220px]">
 												<div className="flex items-center gap-3">
 													<span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/15 text-primary">
 														<Bike className="size-4" />
@@ -229,7 +229,7 @@ function DashboardPage() {
 				</Card>
 
 				<Card>
-					<CardHeader className="flex flex-row items-center justify-between gap-4">
+					<CardHeader className="flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
 						<CardTitle className="font-display text-lg font-bold tracking-[0.04em] uppercase">
 							Pedidos recentes
 						</CardTitle>

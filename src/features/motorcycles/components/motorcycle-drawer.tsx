@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Pencil } from "lucide-react";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ type MotorcycleDrawerProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 	startInEdit?: boolean;
+	onDeleteRequest?: () => void;
 };
 
 const statusLabels = {
@@ -45,6 +46,7 @@ export function MotorcycleDrawer({
 	open,
 	onOpenChange,
 	startInEdit = false,
+	onDeleteRequest,
 }: MotorcycleDrawerProps) {
 	const { data, isLoading } = useMotorcycle(motorcycleId ?? "");
 	const updateMotorcycle = useUpdateMotorcycle();
@@ -164,14 +166,29 @@ export function MotorcycleDrawer({
 						</Button>
 					</form>
 				) : (
-					<Button
-						type="button"
-						variant="outline"
-						onClick={() => setEditing(true)}
-					>
-						<Pencil />
-						Editar unidade
-					</Button>
+					<div className="flex w-full gap-2">
+						<Button
+							type="button"
+							variant="outline"
+							className="flex-1"
+							onClick={() => setEditing(true)}
+						>
+							<Pencil />
+							Editar unidade
+						</Button>
+
+						{onDeleteRequest && (
+							<Button
+								type="button"
+								variant="outline"
+								className="text-destructive hover:text-destructive"
+								onClick={onDeleteRequest}
+							>
+								<Trash2 />
+								Excluir
+							</Button>
+						)}
+					</div>
 				)
 			}
 		>
@@ -250,7 +267,7 @@ export function MotorcycleDrawer({
 										form.setValue(
 											"status",
 											value as UpdateMotorcycleFormValues["status"],
-											{ shouldValidate: true },
+											{ shouldValidate: true, shouldDirty: true },
 										)
 									}
 								>

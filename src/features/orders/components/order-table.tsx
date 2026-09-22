@@ -60,7 +60,7 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 							Cliente
 						</TableHead>
 
-						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+						<TableHead className="hidden font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase md:table-cell">
 							Vendedor
 						</TableHead>
 
@@ -68,11 +68,11 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 							Motocicletas
 						</TableHead>
 
-						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+						<TableHead className="hidden font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase sm:table-cell">
 							Faturamento
 						</TableHead>
 
-						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+						<TableHead className="hidden font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase lg:table-cell">
 							Criado em
 						</TableHead>
 
@@ -87,7 +87,7 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 							className="group cursor-pointer transition-colors hover:bg-primary/[0.04]"
 							onClick={() => onSelect(order)}
 						>
-							<TableCell>
+							<TableCell className="max-w-[200px]">
 								<div className="flex items-center gap-3">
 									<Avatar className="rounded-full bg-primary/15">
 										<AvatarFallback className="bg-transparent font-display text-xs font-bold text-primary">
@@ -107,11 +107,11 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 								</div>
 							</TableCell>
 
-							<TableCell className="text-sm text-secondary-foreground">
+							<TableCell className="hidden text-sm text-secondary-foreground md:table-cell">
 								{order.seller}
 							</TableCell>
 
-							<TableCell>
+							<TableCell className="max-w-[240px]">
 								<div className="space-y-1.5">
 									{order.motorcycles.map((motorcycle) => (
 										<div
@@ -132,11 +132,11 @@ export function OrderTable({ orders, onSelect }: OrderTableProps) {
 								</div>
 							</TableCell>
 
-							<TableCell className="font-mono text-sm tracking-wide text-muted-foreground">
+							<TableCell className="hidden font-mono text-sm tracking-wide text-muted-foreground sm:table-cell">
 								{formatDate(order.billingDate)}
 							</TableCell>
 
-							<TableCell className="font-mono text-xs tracking-wide text-muted-foreground">
+							<TableCell className="hidden font-mono text-xs tracking-wide text-muted-foreground lg:table-cell">
 								{formatDateTime(order.createdAt)}
 							</TableCell>
 

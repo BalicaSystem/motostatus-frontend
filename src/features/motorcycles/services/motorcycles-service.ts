@@ -62,6 +62,12 @@ export async function updateMotorcycle(
 	});
 }
 
+export async function deleteMotorcycle(id: string) {
+	return api<void>(`/motorcycles/${id}`, {
+		method: "DELETE",
+	});
+}
+
 export async function checkInMotorcycle(data: CheckInMotorcycleInput) {
 	return api<{ motorcycle: Motorcycle }>("/motorcycles/check-in", {
 		method: "POST",
