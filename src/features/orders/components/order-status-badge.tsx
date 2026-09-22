@@ -1,33 +1,28 @@
-import { Badge } from "#/components/ui/badge";
+import type { StatusTone } from "#/components/status-pill";
+import { StatusPill } from "#/components/status-pill";
 import type { OrderStatus } from "../types/order";
 
-const statusConfig = {
+const toneConfig = {
 	active: {
 		label: "Ativo",
-		variant: "default",
+		tone: "sky",
 	},
 	released: {
 		label: "Liberado",
-		variant: "secondary",
+		tone: "slate",
 	},
 	completed: {
 		label: "Concluído",
-		variant: "outline",
+		tone: "emerald",
 	},
-} satisfies Record<
-	OrderStatus,
-	{
-		label: string;
-		variant: "default" | "secondary" | "destructive" | "outline";
-	}
->;
+} satisfies Record<OrderStatus, { label: string; tone: StatusTone }>;
 
 type OrderStatusBadgeProps = {
 	status: OrderStatus;
 };
 
 export function OrderStatusBadge({ status }: OrderStatusBadgeProps) {
-	const config = statusConfig[status];
+	const config = toneConfig[status];
 
-	return <Badge variant={config.variant}>{config.label}</Badge>;
+	return <StatusPill tone={config.tone}>{config.label}</StatusPill>;
 }

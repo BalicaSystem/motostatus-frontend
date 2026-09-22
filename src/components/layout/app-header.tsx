@@ -15,7 +15,6 @@ import {
 import { Button } from "#/components/ui/button";
 import { Separator } from "#/components/ui/separator";
 import { SidebarTrigger } from "#/components/ui/sidebar";
-import { queryClient } from "#/lib/api/query-client";
 
 type Crumb = {
 	label: string;
@@ -48,55 +47,10 @@ const rootCrumbs: Record<string, Crumb[]> = {
 function useBreadcrumbs(): Crumb[] {
 	const { pathname } = useLocation();
 
-	return useMemo(() => {
-		const customerMatch = /^\/clientes\/([^/]+)(\/editar)?$/.exec(pathname);
-		if (customerMatch) {
-			const [, customerId, editar] = customerMatch;
-			const customer = queryClient.getQueryData<{ customer: { name: string } }>(
-				["customer", customerId],
-			);
-
-			return [
-				{ label: "Clientes", to: "/clientes" },
-				{ label: customer?.customer.name ?? "Cliente" },
-				...(editar ? [{ label: "Editar" }] : []),
-			];
-		}
-
-		const motorcycleMatch = /^\/motocicletas\/([^/]+)(\/editar)?$/.exec(
-			pathname,
-		);
-		if (motorcycleMatch) {
-			const [, motorcycleId, editar] = motorcycleMatch;
-			const motorcycle = queryClient.getQueryData<{
-				motorcycle: { model: string };
-			}>(["motorcycle", motorcycleId]);
-
-			return [
-				{ label: "Motocicletas", to: "/motocicletas" },
-				{ label: motorcycle?.motorcycle.model ?? "Motocicleta" },
-				...(editar ? [{ label: "Editar" }] : []),
-			];
-		}
-
-		const orderMatch = /^\/pedidos\/([^/]+)(\/editar)?$/.exec(pathname);
-		if (orderMatch) {
-			const [, orderId, editar] = orderMatch;
-			const order = queryClient.getQueryData<{
-				order: { customer: { name: string } };
-			}>(["order", orderId]);
-
-			return [
-				{ label: "Pedidos", to: "/pedidos" },
-				{
-					label: order?.order.customer.name ?? `Pedido ${orderId.slice(0, 8)}`,
-				},
-				...(editar ? [{ label: "Editar" }] : []),
-			];
-		}
-
-		return rootCrumbs[pathname] ?? [{ label: "Painel" }];
-	}, [pathname]);
+	return useMemo(
+		() => rootCrumbs[pathname] ?? [{ label: "Painel" }],
+		[pathname],
+	);
 }
 
 export function AppHeader() {
@@ -130,13 +84,20 @@ export function AppHeader() {
 							{index > 0 && <BreadcrumbSeparator />}
 
 							{index === crumbs.length - 1 ? (
-								<BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+								<BreadcrumbPage className="font-display text-xs font-semibold tracking-[0.06em] uppercase">
+									{crumb.label}
+								</BreadcrumbPage>
 							) : crumb.to ? (
-								<BreadcrumbLink render={<Link to={crumb.to as never} />}>
+								<BreadcrumbLink
+									className="font-display text-xs font-semibold tracking-[0.06em] uppercase"
+									render={<Link to={crumb.to as never} />}
+								>
 									{crumb.label}
 								</BreadcrumbLink>
 							) : (
-								<BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+								<BreadcrumbPage className="font-display text-xs font-semibold tracking-[0.06em] uppercase">
+									{crumb.label}
+								</BreadcrumbPage>
 							)}
 						</BreadcrumbItem>
 					))}

@@ -1,18 +1,26 @@
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
+import { OrderDrawer } from "#/features/orders/components/order-drawer";
 import { OrderPagination } from "#/features/orders/components/order-pagination";
 import { OrderTable } from "#/features/orders/components/order-table";
 import { OrderTableSkeleton } from "#/features/orders/components/order-table-skeleton";
 import { useOrders } from "#/features/orders/hooks/use-orders";
+import type { OrderListItem } from "#/features/orders/types/order";
 
 export function OrdersPage() {
 	const navigate = useNavigate();
 	const { page } = useSearch({ strict: false });
+
+	const [selectedOrder, setSelectedOrder] = useState<OrderListItem | null>(
+		null,
+	);
+	const [drawerOpen, setDrawerOpen] = useState(false);
 
 	const { data, isLoading, isPlaceholderData, isError } = useOrders(page);
 
@@ -23,6 +31,11 @@ export function OrdersPage() {
 				page: nextPage,
 			},
 		});
+	}
+
+	function handleSelectOrder(order: OrderListItem) {
+		setSelectedOrder(order);
+		setDrawerOpen(true);
 	}
 
 	return (
@@ -51,7 +64,7 @@ export function OrdersPage() {
 			{data && (
 				<div className="space-y-3">
 					<div className="relative">
-						<OrderTable orders={data.orders} />
+						<OrderTable orders={data.orders} onSelect={handleSelectOrder} />
 
 						<TableSyncIndicator show={isPlaceholderData} />
 					</div>
@@ -65,6 +78,12 @@ export function OrdersPage() {
 					/>
 				</div>
 			)}
+
+			<OrderDrawer
+				orderId={selectedOrder?.id ?? null}
+				open={drawerOpen}
+				onOpenChange={setDrawerOpen}
+			/>
 		</PageContainer>
 	);
 }

@@ -1,18 +1,26 @@
 import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
+import { CustomerDrawer } from "#/features/customers/components/customer-drawer";
 import { CustomerPagination } from "#/features/customers/components/customer-pagination";
 import { CustomerTable } from "#/features/customers/components/customer-table";
 import { CustomerTableSkeleton } from "#/features/customers/components/customer-table-skeleton";
 import { useCustomers } from "#/features/customers/hooks/use-customers";
+import type { Customer } from "#/features/customers/types/customer";
 
 export function CustomersPage() {
 	const navigate = useNavigate();
 	const { page } = useSearch({ strict: false });
+
+	const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+		null,
+	);
+	const [drawerOpen, setDrawerOpen] = useState(false);
 
 	const { data, isLoading, isPlaceholderData, isError } = useCustomers(page);
 
@@ -23,6 +31,11 @@ export function CustomersPage() {
 				page: nextPage,
 			},
 		});
+	}
+
+	function handleSelectCustomer(customer: Customer) {
+		setSelectedCustomer(customer);
+		setDrawerOpen(true);
 	}
 
 	return (
@@ -51,7 +64,10 @@ export function CustomersPage() {
 			{data && (
 				<div className="space-y-3">
 					<div className="relative">
-						<CustomerTable customers={data.customers} />
+						<CustomerTable
+							customers={data.customers}
+							onSelect={handleSelectCustomer}
+						/>
 
 						<TableSyncIndicator show={isPlaceholderData} />
 					</div>
@@ -65,6 +81,12 @@ export function CustomersPage() {
 					/>
 				</div>
 			)}
+
+			<CustomerDrawer
+				customerId={selectedCustomer?.id ?? null}
+				open={drawerOpen}
+				onOpenChange={setDrawerOpen}
+			/>
 		</PageContainer>
 	);
 }

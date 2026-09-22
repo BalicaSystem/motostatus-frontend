@@ -1,33 +1,28 @@
-import { Badge } from "#/components/ui/badge";
+import type { StatusTone } from "#/components/status-pill";
+import { StatusPill } from "#/components/status-pill";
 import type { Motorcycle } from "../types/motorcycle";
 
-const statusConfig = {
+const toneConfig = {
 	in_transit: {
 		label: "Em trânsito",
-		variant: "outline",
+		tone: "amber",
 	},
 	delayed: {
 		label: "Atrasada",
-		variant: "destructive",
+		tone: "red",
 	},
 	arrived: {
 		label: "Chegou",
-		variant: "default",
+		tone: "emerald",
 	},
-} satisfies Record<
-	Motorcycle["status"],
-	{
-		label: string;
-		variant: "default" | "secondary" | "destructive" | "outline";
-	}
->;
+} satisfies Record<Motorcycle["status"], { label: string; tone: StatusTone }>;
 
 type MotorcycleStatusBadgeProps = {
 	status: Motorcycle["status"];
 };
 
 export function MotorcycleStatusBadge({ status }: MotorcycleStatusBadgeProps) {
-	const config = statusConfig[status];
+	const config = toneConfig[status];
 
-	return <Badge variant={config.variant}>{config.label}</Badge>;
+	return <StatusPill tone={config.tone}>{config.label}</StatusPill>;
 }

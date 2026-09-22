@@ -1,26 +1,21 @@
-import { Badge } from "#/components/ui/badge";
+import type { StatusTone } from "#/components/status-pill";
+import { StatusPill } from "#/components/status-pill";
 import type { RegistrationStatus } from "../types/order";
 
-const statusConfig = {
+const toneConfig = {
 	without_registration: {
 		label: "Sem emplacamento",
-		variant: "outline",
+		tone: "slate",
 	},
 	registering: {
 		label: "Emplacando",
-		variant: "secondary",
+		tone: "amber",
 	},
 	registered: {
 		label: "Emplacado",
-		variant: "default",
+		tone: "emerald",
 	},
-} satisfies Record<
-	RegistrationStatus,
-	{
-		label: string;
-		variant: "default" | "secondary" | "destructive" | "outline";
-	}
->;
+} satisfies Record<RegistrationStatus, { label: string; tone: StatusTone }>;
 
 type RegistrationStatusBadgeProps = {
 	status: RegistrationStatus;
@@ -29,7 +24,7 @@ type RegistrationStatusBadgeProps = {
 export function RegistrationStatusBadge({
 	status,
 }: RegistrationStatusBadgeProps) {
-	const config = statusConfig[status];
+	const config = toneConfig[status];
 
-	return <Badge variant={config.variant}>{config.label}</Badge>;
+	return <StatusPill tone={config.tone}>{config.label}</StatusPill>;
 }

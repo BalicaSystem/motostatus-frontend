@@ -1,13 +1,18 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Plus, QrCode } from "lucide-react";
+import { useMemo, useState } from "react";
+
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
+import { type FilterOption, StatusFilter } from "#/components/status-filter";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
+import { MotorcycleCardGrid } from "#/features/motorcycles/components/motorcycle-card-grid";
+import { MotorcycleDrawer } from "#/features/motorcycles/components/motorcycle-drawer";
 import { MotorcyclePagination } from "#/features/motorcycles/components/motorcycle-pagination";
-import { MotorcycleTable } from "#/features/motorcycles/components/motorcycle-table";
 import { MotorcycleTableSkeleton } from "#/features/motorcycles/components/motorcycle-table-skeleton";
 import { useMotorcycles } from "#/features/motorcycles/hooks/use-motorcycles";
+import type { Motorcycle } from "#/features/motorcycles/types/motorcycle";
 
 export const Route = createFileRoute("/motocicletas/")({
 	validateSearch: (search) => ({
@@ -16,10 +21,40 @@ export const Route = createFileRoute("/motocicletas/")({
 	component: MotorcyclesPage,
 });
 
+const statusOptions: FilterOption[] = [
+	{ value: "all", label: "Todos" },
+	{ value: "in_transit", label: "Em trânsito" },
+	{ value: "delayed", label: "Atrasadas" },
+	{ value: "arrived", label: "Chegadas" },
+];
+
+type MotorcycleStatusFilter = "all" | "in_transit" | "delayed" | "arrived";
+
 function MotorcyclesPage() {
 	const navigate = useNavigate();
 	const { page } = Route.useSearch();
+
+	const [statusFilter, setStatusFilter] =
+		useState<MotorcycleStatusFilter>("all");
+	const [selectedMotorcycle, setSelectedMotorcycle] =
+		useState<Motorcycle | null>(null);
+	const [drawerOpen, setDrawerOpen] = useState(false);
+
 	const { data, isLoading, isPlaceholderData, isError } = useMotorcycles(page);
+
+	const filteredMotorcycles = useMemo(() => {
+		if (!data) {
+			return [];
+		}
+
+		if (statusFilter === "all") {
+			return data.motorcycles;
+		}
+
+		return data.motorcycles.filter(
+			(motorcycle) => motorcycle.status === statusFilter,
+		);
+	}, [data, statusFilter]);
 
 	function handlePageChange(nextPage: number) {
 		navigate({
@@ -28,6 +63,11 @@ function MotorcyclesPage() {
 				page: nextPage,
 			},
 		});
+	}
+
+	function handleSelectMotorcycle(motorcycle: Motorcycle) {
+		setSelectedMotorcycle(motorcycle);
+		setDrawerOpen(true);
 	}
 
 	return (
@@ -69,8 +109,19 @@ function MotorcyclesPage() {
 
 			{data && (
 				<div className="space-y-3">
+					<StatusFilter
+						options={statusOptions}
+						value={statusFilter as string}
+						onChange={(value) =>
+							setStatusFilter(value as MotorcycleStatusFilter)
+						}
+					/>
+
 					<div className="relative">
-						<MotorcycleTable motorcycles={data.motorcycles} />
+						<MotorcycleCardGrid
+							motorcycles={filteredMotorcycles}
+							onSelect={handleSelectMotorcycle}
+						/>
 
 						<TableSyncIndicator show={isPlaceholderData} />
 					</div>
@@ -84,6 +135,12 @@ function MotorcyclesPage() {
 					/>
 				</div>
 			)}
+
+			<MotorcycleDrawer
+				motorcycleId={selectedMotorcycle?.id ?? null}
+				open={drawerOpen}
+				onOpenChange={setDrawerOpen}
+			/>
 		</PageContainer>
 	);
 }

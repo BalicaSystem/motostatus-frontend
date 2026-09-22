@@ -18,13 +18,7 @@ import { Route as MotocicletasIndexRouteImport } from './routes/motocicletas/ind
 import { Route as MotocicletasNovaRouteImport } from './routes/motocicletas/nova'
 import { Route as MotocicletasRegistrarChegadaRouteImport } from './routes/motocicletas/registrar-chegada'
 import { Route as PedidosIndexRouteImport } from './routes/pedidos/index'
-import { Route as PedidosOrderIdRouteImport } from './routes/pedidos/$orderId'
 import { Route as PedidosNovoRouteImport } from './routes/pedidos/novo'
-import { Route as ClientesCustomerIdIndexRouteImport } from './routes/clientes/$customerId/index'
-import { Route as ClientesCustomerIdEditarRouteImport } from './routes/clientes/$customerId/editar'
-import { Route as MotocicletasMotorcycleIdIndexRouteImport } from './routes/motocicletas/$motorcycleId/index'
-import { Route as MotocicletasMotorcycleIdEditarRouteImport } from './routes/motocicletas/$motorcycleId/editar'
-import { Route as PedidosOrderIdEditarRouteImport } from './routes/pedidos/$orderId/editar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -72,43 +66,10 @@ const PedidosIndexRoute = PedidosIndexRouteImport.update({
   path: '/pedidos/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PedidosOrderIdRoute = PedidosOrderIdRouteImport.update({
-  id: '/pedidos/$orderId',
-  path: '/pedidos/$orderId',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PedidosNovoRoute = PedidosNovoRouteImport.update({
   id: '/pedidos/novo',
   path: '/pedidos/novo',
   getParentRoute: () => rootRouteImport,
-} as any)
-const ClientesCustomerIdIndexRoute = ClientesCustomerIdIndexRouteImport.update({
-  id: '/clientes/$customerId/',
-  path: '/clientes/$customerId/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClientesCustomerIdEditarRoute =
-  ClientesCustomerIdEditarRouteImport.update({
-    id: '/clientes/$customerId/editar',
-    path: '/clientes/$customerId/editar',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const MotocicletasMotorcycleIdIndexRoute =
-  MotocicletasMotorcycleIdIndexRouteImport.update({
-    id: '/motocicletas/$motorcycleId/',
-    path: '/motocicletas/$motorcycleId/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const MotocicletasMotorcycleIdEditarRoute =
-  MotocicletasMotorcycleIdEditarRouteImport.update({
-    id: '/motocicletas/$motorcycleId/editar',
-    path: '/motocicletas/$motorcycleId/editar',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PedidosOrderIdEditarRoute = PedidosOrderIdEditarRouteImport.update({
-  id: '/editar',
-  path: '/editar',
-  getParentRoute: () => PedidosOrderIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -118,16 +79,10 @@ export interface FileRoutesByFullPath {
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
-  '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
-  '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
-  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
-  '/clientes/$customerId/': typeof ClientesCustomerIdIndexRoute
-  '/motocicletas/$motorcycleId/': typeof MotocicletasMotorcycleIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -136,16 +91,10 @@ export interface FileRoutesByTo {
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes': typeof ClientesIndexRoute
   '/motocicletas': typeof MotocicletasIndexRoute
   '/pedidos': typeof PedidosIndexRoute
-  '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
-  '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
-  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
-  '/clientes/$customerId': typeof ClientesCustomerIdIndexRoute
-  '/motocicletas/$motorcycleId': typeof MotocicletasMotorcycleIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -155,16 +104,10 @@ export interface FileRoutesById {
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
-  '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
-  '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
-  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
-  '/clientes/$customerId/': typeof ClientesCustomerIdIndexRoute
-  '/motocicletas/$motorcycleId/': typeof MotocicletasMotorcycleIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -175,16 +118,10 @@ export interface FileRouteTypes {
     | '/clientes/novo'
     | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/$orderId'
     | '/pedidos/novo'
     | '/clientes/'
     | '/motocicletas/'
     | '/pedidos/'
-    | '/clientes/$customerId/editar'
-    | '/motocicletas/$motorcycleId/editar'
-    | '/pedidos/$orderId/editar'
-    | '/clientes/$customerId/'
-    | '/motocicletas/$motorcycleId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -193,16 +130,10 @@ export interface FileRouteTypes {
     | '/clientes/novo'
     | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/$orderId'
     | '/pedidos/novo'
     | '/clientes'
     | '/motocicletas'
     | '/pedidos'
-    | '/clientes/$customerId/editar'
-    | '/motocicletas/$motorcycleId/editar'
-    | '/pedidos/$orderId/editar'
-    | '/clientes/$customerId'
-    | '/motocicletas/$motorcycleId'
   id:
     | '__root__'
     | '/'
@@ -211,16 +142,10 @@ export interface FileRouteTypes {
     | '/clientes/novo'
     | '/motocicletas/nova'
     | '/motocicletas/registrar-chegada'
-    | '/pedidos/$orderId'
     | '/pedidos/novo'
     | '/clientes/'
     | '/motocicletas/'
     | '/pedidos/'
-    | '/clientes/$customerId/editar'
-    | '/motocicletas/$motorcycleId/editar'
-    | '/pedidos/$orderId/editar'
-    | '/clientes/$customerId/'
-    | '/motocicletas/$motorcycleId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -230,15 +155,10 @@ export interface RootRouteChildren {
   ClientesNovoRoute: typeof ClientesNovoRoute
   MotocicletasNovaRoute: typeof MotocicletasNovaRoute
   MotocicletasRegistrarChegadaRoute: typeof MotocicletasRegistrarChegadaRoute
-  PedidosOrderIdRoute: typeof PedidosOrderIdRouteWithChildren
   PedidosNovoRoute: typeof PedidosNovoRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
   MotocicletasIndexRoute: typeof MotocicletasIndexRoute
   PedidosIndexRoute: typeof PedidosIndexRoute
-  ClientesCustomerIdEditarRoute: typeof ClientesCustomerIdEditarRoute
-  MotocicletasMotorcycleIdEditarRoute: typeof MotocicletasMotorcycleIdEditarRoute
-  ClientesCustomerIdIndexRoute: typeof ClientesCustomerIdIndexRoute
-  MotocicletasMotorcycleIdIndexRoute: typeof MotocicletasMotorcycleIdIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -306,13 +226,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PedidosIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pedidos/$orderId': {
-      id: '/pedidos/$orderId'
-      path: '/pedidos/$orderId'
-      fullPath: '/pedidos/$orderId'
-      preLoaderRoute: typeof PedidosOrderIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pedidos/novo': {
       id: '/pedidos/novo'
       path: '/pedidos/novo'
@@ -320,55 +233,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PedidosNovoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clientes/$customerId/': {
-      id: '/clientes/$customerId/'
-      path: '/clientes/$customerId'
-      fullPath: '/clientes/$customerId/'
-      preLoaderRoute: typeof ClientesCustomerIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/clientes/$customerId/editar': {
-      id: '/clientes/$customerId/editar'
-      path: '/clientes/$customerId/editar'
-      fullPath: '/clientes/$customerId/editar'
-      preLoaderRoute: typeof ClientesCustomerIdEditarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/motocicletas/$motorcycleId/': {
-      id: '/motocicletas/$motorcycleId/'
-      path: '/motocicletas/$motorcycleId'
-      fullPath: '/motocicletas/$motorcycleId/'
-      preLoaderRoute: typeof MotocicletasMotorcycleIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/motocicletas/$motorcycleId/editar': {
-      id: '/motocicletas/$motorcycleId/editar'
-      path: '/motocicletas/$motorcycleId/editar'
-      fullPath: '/motocicletas/$motorcycleId/editar'
-      preLoaderRoute: typeof MotocicletasMotorcycleIdEditarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pedidos/$orderId/editar': {
-      id: '/pedidos/$orderId/editar'
-      path: '/editar'
-      fullPath: '/pedidos/$orderId/editar'
-      preLoaderRoute: typeof PedidosOrderIdEditarRouteImport
-      parentRoute: typeof PedidosOrderIdRoute
-    }
   }
 }
-
-interface PedidosOrderIdRouteChildren {
-  PedidosOrderIdEditarRoute: typeof PedidosOrderIdEditarRoute
-}
-
-const PedidosOrderIdRouteChildren: PedidosOrderIdRouteChildren = {
-  PedidosOrderIdEditarRoute: PedidosOrderIdEditarRoute,
-}
-
-const PedidosOrderIdRouteWithChildren = PedidosOrderIdRoute._addFileChildren(
-  PedidosOrderIdRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -377,15 +243,10 @@ const rootRouteChildren: RootRouteChildren = {
   ClientesNovoRoute: ClientesNovoRoute,
   MotocicletasNovaRoute: MotocicletasNovaRoute,
   MotocicletasRegistrarChegadaRoute: MotocicletasRegistrarChegadaRoute,
-  PedidosOrderIdRoute: PedidosOrderIdRouteWithChildren,
   PedidosNovoRoute: PedidosNovoRoute,
   ClientesIndexRoute: ClientesIndexRoute,
   MotocicletasIndexRoute: MotocicletasIndexRoute,
   PedidosIndexRoute: PedidosIndexRoute,
-  ClientesCustomerIdEditarRoute: ClientesCustomerIdEditarRoute,
-  MotocicletasMotorcycleIdEditarRoute: MotocicletasMotorcycleIdEditarRoute,
-  ClientesCustomerIdIndexRoute: ClientesCustomerIdIndexRoute,
-  MotocicletasMotorcycleIdIndexRoute: MotocicletasMotorcycleIdIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

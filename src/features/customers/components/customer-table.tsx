@@ -1,7 +1,7 @@
-import { Link } from "@tanstack/react-router";
-import { Eye, MoreHorizontal, Pencil, Trash2, Users } from "lucide-react";
+import { ArrowRight, MoreHorizontal, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+
 import {
 	AlertDialog,
 	AlertDialogActions,
@@ -30,9 +30,10 @@ import type { Customer } from "../types/customer";
 
 type CustomerTableProps = {
 	customers: Customer[];
+	onSelect: (customer: Customer) => void;
 };
 
-export function CustomerTable({ customers }: CustomerTableProps) {
+export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 	const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(
 		null,
 	);
@@ -67,98 +68,111 @@ export function CustomerTable({ customers }: CustomerTableProps) {
 				<p className="text-sm text-muted-foreground">
 					Nenhum cliente cadastrado ainda.
 				</p>
-
-				<Button
-					variant="outline"
-					size="sm"
-					render={<Link to="/clientes/novo" />}
-				>
-					<Users className="size-4" />
-					Cadastrar primeiro cliente
-				</Button>
 			</div>
 		);
 	}
 
 	return (
-		<div className="overflow-hidden rounded-lg border">
+		<div className="overflow-hidden rounded-lg border border-border">
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead>Nome</TableHead>
-						<TableHead>CPF/CNPJ</TableHead>
-						<TableHead>Cidade</TableHead>
-						<TableHead className="w-12" />
+						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+							Cliente
+						</TableHead>
+
+						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+							CPF/CNPJ
+						</TableHead>
+
+						<TableHead className="font-mono text-[0.6rem] font-normal tracking-[0.1em] text-muted-foreground uppercase">
+							Cidade
+						</TableHead>
+
+						<TableHead className="w-24" />
 					</TableRow>
 				</TableHeader>
 
 				<TableBody>
 					{customers.map((customer) => (
-						<TableRow key={customer.id}>
+						<TableRow
+							key={customer.id}
+							className="group cursor-pointer transition-colors hover:bg-primary/[0.04]"
+							onClick={() => onSelect(customer)}
+						>
 							<TableCell>
 								<div className="flex items-center gap-3">
-									<Avatar>
-										<AvatarFallback className="bg-primary/10 text-primary">
+									<Avatar className="rounded-full bg-primary/15">
+										<AvatarFallback className="bg-transparent font-display text-xs font-bold text-primary">
 											{getInitials(customer.name)}
 										</AvatarFallback>
 									</Avatar>
 
-									<span className="font-medium">{customer.name}</span>
+									<div className="min-w-0">
+										<p className="truncate font-medium text-foreground">
+											{customer.name}
+										</p>
+
+										<p className="font-mono text-[0.65rem] tracking-wider text-muted-foreground">
+											{customer.id}
+										</p>
+									</div>
 								</div>
 							</TableCell>
 
-							<TableCell className="font-mono text-sm">
+							<TableCell className="font-mono text-sm tracking-wide text-muted-foreground">
 								{customer.document}
 							</TableCell>
 
-							<TableCell>{customer.city}</TableCell>
+							<TableCell className="text-sm text-secondary-foreground">
+								{customer.city}
+							</TableCell>
 
-							<TableCell>
-								<DropdownMenu>
-									<DropdownMenuTrigger
-										render={
-											<Button variant="ghost" size="icon" className="size-8" />
-										}
+							<TableCell className="text-right">
+								<div className="flex items-center justify-end gap-1">
+									<Button
+										variant="ghost"
+										size="icon-sm"
+										className="size-7 text-muted-foreground hover:bg-primary/10 hover:text-primary"
+										onClick={(event) => {
+											event.stopPropagation();
+											onSelect(customer);
+										}}
 									>
-										<MoreHorizontal className="size-4" />
-										<span className="sr-only">Ações do cliente</span>
-									</DropdownMenuTrigger>
+										<ArrowRight className="size-4" />
+										<span className="sr-only">Visualizar</span>
+									</Button>
 
-									<DropdownMenuContent align="end">
-										<DropdownMenuItem
+									<DropdownMenu>
+										<DropdownMenuTrigger
 											render={
-												<Link
-													to="/clientes/$customerId"
-													params={{ customerId: customer.id }}
+												<Button
+													variant="ghost"
+													size="icon-sm"
+													className="size-7"
 												/>
 											}
 										>
-											<Eye />
-											Visualizar
-										</DropdownMenuItem>
+											<MoreHorizontal className="size-4" />
+											<span className="sr-only">Ações do cliente</span>
+										</DropdownMenuTrigger>
 
-										<DropdownMenuItem
-											render={
-												<Link
-													to="/clientes/$customerId/editar"
-													params={{ customerId: customer.id }}
-												/>
-											}
-										>
-											<Pencil />
-											Editar
-										</DropdownMenuItem>
+										<DropdownMenuContent align="end">
+											<DropdownMenuItem onClick={() => onSelect(customer)}>
+												<ArrowRight />
+												Visualizar
+											</DropdownMenuItem>
 
-										<DropdownMenuItem
-											data-danger
-											className="text-destructive data-[danger=true]:text-destructive"
-											onClick={() => setCustomerToDelete(customer)}
-										>
-											<Trash2 />
-											Excluir
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
+											<DropdownMenuItem
+												variant="destructive"
+												onClick={() => setCustomerToDelete(customer)}
+											>
+												<Trash2 />
+												Excluir
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
 							</TableCell>
 						</TableRow>
 					))}

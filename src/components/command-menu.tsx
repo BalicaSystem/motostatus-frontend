@@ -126,8 +126,7 @@ function getRecentCommands(): CommandItem[] {
 			description: "Cliente",
 			group: "Registros recentes",
 			icon: Users,
-			to: "/clientes/$customerId",
-			params: { customerId: customer.id },
+			to: "/clientes",
 		});
 	}
 
@@ -138,8 +137,7 @@ function getRecentCommands(): CommandItem[] {
 			description: "Motocicleta",
 			group: "Registros recentes",
 			icon: Bike,
-			to: "/motocicletas/$motorcycleId",
-			params: { motorcycleId: motorcycle.id },
+			to: "/motocicletas",
 		});
 	}
 
@@ -150,8 +148,7 @@ function getRecentCommands(): CommandItem[] {
 			description: `Pedido ${order.id.slice(0, 8).toUpperCase()}`,
 			group: "Registros recentes",
 			icon: ClipboardList,
-			to: "/pedidos/$orderId",
-			params: { orderId: order.id },
+			to: "/pedidos",
 		});
 	}
 
