@@ -10,9 +10,18 @@ import {
 	CardHeader,
 	CardTitle,
 } from "#/components/ui/card";
+import { Checkbox } from "#/components/ui/checkbox";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "#/components/ui/select";
 import { useCustomers } from "#/features/customers/hooks/use-customers";
+import { MotorcycleStatusBadge } from "#/features/motorcycles/components/motorcycle-status-badge";
 import { useMotorcycles } from "#/features/motorcycles/hooks/use-motorcycles";
 import { useCreateOrder } from "../hooks/use-create-order";
 import {
@@ -68,7 +77,7 @@ export function OrderCreateForm() {
 				description: "O pedido foi registrado.",
 			});
 
-			await navigate({ to: "/pedidos" });
+			await navigate({ to: "/pedidos", search: { page: 1 } });
 		} catch (error) {
 			toast.error("Não foi possível criar o pedido", {
 				description:
@@ -108,21 +117,28 @@ export function OrderCreateForm() {
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 					<div className="grid gap-6 md:grid-cols-2">
 						<Field data-invalid={!!form.formState.errors.customerId}>
-							<FieldLabel htmlFor="customerId">Cliente</FieldLabel>
+							<FieldLabel>Cliente</FieldLabel>
 
-							<select
-								id="customerId"
-								className="h-9 w-full rounded-md border bg-transparent px-3 text-sm"
-								{...form.register("customerId")}
+							<Select
+								value={form.watch("customerId")}
+								onValueChange={(value) =>
+									form.setValue("customerId", value ?? "", {
+										shouldValidate: true,
+									})
+								}
 							>
-								<option value="">Selecione o cliente</option>
+								<SelectTrigger className="w-full">
+									<SelectValue placeholder="Selecione o cliente" />
+								</SelectTrigger>
 
-								{customers.data.customers.map((customer) => (
-									<option key={customer.id} value={customer.id}>
-										{customer.name} — {customer.document}
-									</option>
-								))}
-							</select>
+								<SelectContent>
+									{customers.data.customers.map((customer) => (
+										<SelectItem key={customer.id} value={customer.id}>
+											{customer.name} — {customer.document}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 
 							{form.formState.errors.customerId && (
 								<FieldError>
@@ -165,7 +181,7 @@ export function OrderCreateForm() {
 					<Field data-invalid={!!form.formState.errors.motorcycleIds}>
 						<FieldLabel>Motocicletas</FieldLabel>
 
-						<div className="space-y-2 rounded-lg border p-3">
+						<div className="space-y-1 rounded-lg border p-3">
 							{motorcycles.data.motorcycles.length === 0 ? (
 								<p className="text-sm text-muted-foreground">
 									Nenhuma motocicleta disponível.
@@ -177,15 +193,16 @@ export function OrderCreateForm() {
 									return (
 										<label
 											key={motorcycle.id}
+											htmlFor={`motorcycle-${motorcycle.id}`}
 											className="flex cursor-pointer items-center gap-3 rounded-md p-2 hover:bg-muted"
 										>
-											<input
-												type="checkbox"
+											<Checkbox
+												id={`motorcycle-${motorcycle.id}`}
 												checked={checked}
-												onChange={() => toggleMotorcycle(motorcycle.id)}
+												onCheckedChange={() => toggleMotorcycle(motorcycle.id)}
 											/>
 
-											<div className="flex flex-1 items-center justify-between">
+											<div className="flex flex-1 items-center justify-between gap-2">
 												<div>
 													<p className="text-sm font-medium">
 														{motorcycle.model}
@@ -196,9 +213,7 @@ export function OrderCreateForm() {
 													</p>
 												</div>
 
-												<span className="text-xs text-muted-foreground">
-													{motorcycle.status}
-												</span>
+												<MotorcycleStatusBadge status={motorcycle.status} />
 											</div>
 										</label>
 									);
@@ -218,7 +233,7 @@ export function OrderCreateForm() {
 							type="button"
 							variant="outline"
 							disabled={createOrder.isPending}
-							onClick={() => navigate({ to: "/pedidos" })}
+							onClick={() => navigate({ to: "/pedidos", search: { page: 1 } })}
 						>
 							Cancelar
 						</Button>

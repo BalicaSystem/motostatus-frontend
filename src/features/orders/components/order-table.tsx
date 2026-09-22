@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Eye, MoreHorizontal } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 
 import { Button } from "#/components/ui/button";
 import {
@@ -105,6 +105,18 @@ export function OrderTable({ orders }: OrderTableProps) {
 										>
 											<Eye />
 											Visualizar
+										</DropdownMenuItem>
+
+										<DropdownMenuItem
+											render={
+												<Link
+													to="/pedidos/$orderId/editar"
+													params={{ orderId: order.id }}
+												/>
+											}
+										>
+											<Pencil />
+											Editar
 										</DropdownMenuItem>
 									</DropdownMenuContent>
 								</DropdownMenu>

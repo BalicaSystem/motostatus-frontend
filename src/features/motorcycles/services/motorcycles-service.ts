@@ -30,14 +30,19 @@ export type CheckInMotorcycleInput = {
 	chassis: string;
 };
 
-export async function getMotorcycles(page = 1, perPage = 20) {
+export async function getMotorcycles(
+	page = 1,
+	perPage = 20,
+	signal?: AbortSignal,
+) {
 	return api<GetMotorcyclesResponse>(
 		`/motorcycles?page=${page}&perPage=${perPage}`,
+		{ signal },
 	);
 }
 
-export async function getMotorcycle(id: string) {
-	return api<GetMotorcycleResponse>(`/motorcycles/${id}`);
+export async function getMotorcycle(id: string, signal?: AbortSignal) {
+	return api<GetMotorcycleResponse>(`/motorcycles/${id}`, { signal });
 }
 
 export async function createMotorcycle(data: CreateMotorcycleInput) {

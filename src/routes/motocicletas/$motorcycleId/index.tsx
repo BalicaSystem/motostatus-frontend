@@ -1,29 +1,29 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeft, Pencil } from 'lucide-react'
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft, Pencil } from "lucide-react";
 
-import { PageContainer } from '#/components/layout/page-container'
-import { PageHeader } from '#/components/layout/page-header'
-import { Button } from '#/components/ui/button'
+import { PageContainer } from "#/components/layout/page-container";
+import { PageHeader } from "#/components/layout/page-header";
+import { Button } from "#/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
-} from '#/components/ui/card'
-import { Separator } from '#/components/ui/separator'
-import { Skeleton } from '#/components/ui/skeleton'
-import { MotorcycleStatusBadge } from '#/features/motorcycles/components/motorcycle-status-badge'
-import { useMotorcycle } from '#/features/motorcycles/hooks/use-motorcycle'
-import { formatDate } from '#/lib/formatDate'
+} from "#/components/ui/card";
+import { Separator } from "#/components/ui/separator";
+import { Skeleton } from "#/components/ui/skeleton";
+import { MotorcycleStatusBadge } from "#/features/motorcycles/components/motorcycle-status-badge";
+import { useMotorcycle } from "#/features/motorcycles/hooks/use-motorcycle";
+import { formatDate } from "#/lib/formatDate";
 
-export const Route = createFileRoute('/motocicletas/$motorcycleId/')({
+export const Route = createFileRoute("/motocicletas/$motorcycleId/")({
 	component: MotorcycleDetailsPage,
-})
+});
 
 function MotorcycleDetailsPage() {
-	const { motorcycleId } = Route.useParams()
-	const { data, isLoading, isError } = useMotorcycle(motorcycleId)
+	const { motorcycleId } = Route.useParams();
+	const { data, isLoading, isError } = useMotorcycle(motorcycleId);
 
 	if (isLoading) {
 		return (
@@ -35,7 +35,7 @@ function MotorcycleDetailsPage() {
 
 				<MotorcycleDetailsSkeleton />
 			</PageContainer>
-		)
+		);
 	}
 
 	if (isError || !data) {
@@ -52,10 +52,10 @@ function MotorcycleDetailsPage() {
 					</p>
 				</div>
 			</PageContainer>
-		)
+		);
 	}
 
-	const { motorcycle } = data
+	const { motorcycle } = data;
 
 	return (
 		<PageContainer>
@@ -112,7 +112,9 @@ function MotorcycleDetailsPage() {
 						<Separator />
 
 						<div>
-							<p className="text-sm text-muted-foreground">Previsão de chegada</p>
+							<p className="text-sm text-muted-foreground">
+								Previsão de chegada
+							</p>
 							<p className="font-medium">
 								{formatDate(motorcycle.estimatedArrival)}
 							</p>
@@ -160,7 +162,7 @@ function MotorcycleDetailsPage() {
 				</Card>
 			</div>
 		</PageContainer>
-	)
+	);
 }
 
 function MotorcycleDetailsSkeleton() {
@@ -173,8 +175,8 @@ function MotorcycleDetailsSkeleton() {
 				</CardHeader>
 
 				<CardContent className="space-y-6">
-					{Array.from({ length: 4 }).map((_, index) => (
-						<div key={index} className="space-y-2">
+					{Array.from({ length: 4 }, (_, index) => index).map((item) => (
+						<div key={item} className="space-y-2">
 							<Skeleton className="h-4 w-32" />
 							<Skeleton className="h-5 w-48" />
 						</div>
@@ -203,5 +205,5 @@ function MotorcycleDetailsSkeleton() {
 				</CardContent>
 			</Card>
 		</div>
-	)
+	);
 }

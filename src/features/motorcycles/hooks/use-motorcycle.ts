@@ -4,7 +4,7 @@ import { getMotorcycle } from "../services/motorcycles-service";
 export function useMotorcycle(id: string) {
 	return useQuery({
 		queryKey: ["motorcycle", id],
-		queryFn: () => getMotorcycle(id),
+		queryFn: ({ signal }) => getMotorcycle(id, signal),
 		enabled: Boolean(id),
 	});
 }

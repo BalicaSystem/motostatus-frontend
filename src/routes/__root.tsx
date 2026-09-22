@@ -32,7 +32,7 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="pt-BR">
+		<html lang="pt-BR" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
@@ -40,8 +40,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body>
 				<Providers>
 					<AppLayout>{children}</AppLayout>
+					<Toaster />
 				</Providers>
-				<Toaster />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",

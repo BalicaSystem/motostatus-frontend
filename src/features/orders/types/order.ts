@@ -1,7 +1,7 @@
 import type { Customer } from "#/features/customers/types/customer";
 import type { Motorcycle } from "#/features/motorcycles/types/motorcycle";
 
-export type OrderStatus = "active" | "cancelled";
+export type OrderStatus = "active" | "released" | "completed";
 
 export type RegistrationStatus =
 	| "without_registration"

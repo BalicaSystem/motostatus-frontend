@@ -6,9 +6,13 @@ const statusConfig = {
 		label: "Ativo",
 		variant: "default",
 	},
-	cancelled: {
-		label: "Cancelado",
-		variant: "destructive",
+	released: {
+		label: "Liberado",
+		variant: "secondary",
+	},
+	completed: {
+		label: "Concluído",
+		variant: "outline",
 	},
 } satisfies Record<
 	OrderStatus,

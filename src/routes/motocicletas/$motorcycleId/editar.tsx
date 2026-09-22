@@ -1,17 +1,17 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
-import { PageContainer } from '#/components/layout/page-container'
-import { PageHeader } from '#/components/layout/page-header'
-import { Button } from '#/components/ui/button'
-import { MotorcycleEditForm } from '#/features/motorcycles/components/motorcycle-edit-form'
+import { PageContainer } from "#/components/layout/page-container";
+import { PageHeader } from "#/components/layout/page-header";
+import { Button } from "#/components/ui/button";
+import { MotorcycleEditForm } from "#/features/motorcycles/components/motorcycle-edit-form";
 
-export const Route = createFileRoute('/motocicletas/$motorcycleId/editar')({
+export const Route = createFileRoute("/motocicletas/$motorcycleId/editar")({
 	component: EditMotorcyclePage,
-})
+});
 
 function EditMotorcyclePage() {
-	const { motorcycleId } = Route.useParams()
+	const { motorcycleId } = Route.useParams();
 
 	return (
 		<PageContainer>
@@ -37,5 +37,5 @@ function EditMotorcyclePage() {
 
 			<MotorcycleEditForm motorcycleId={motorcycleId} />
 		</PageContainer>
-	)
+	);
 }

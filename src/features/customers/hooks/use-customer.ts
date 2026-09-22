@@ -4,7 +4,7 @@ import { getCustomer } from "../services/customers-service";
 export function useCustomer(id: string) {
 	return useQuery({
 		queryKey: ["customer", id],
-		queryFn: () => getCustomer(id),
+		queryFn: ({ signal }) => getCustomer(id, signal),
 		enabled: Boolean(id),
 	});
 }

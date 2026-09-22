@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as R404RouteImport } from './routes/404'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClientesIndexRouteImport } from './routes/clientes/index'
 import { Route as ClientesNovoRouteImport } from './routes/clientes/novo'
@@ -23,10 +24,16 @@ import { Route as ClientesCustomerIdIndexRouteImport } from './routes/clientes/$
 import { Route as ClientesCustomerIdEditarRouteImport } from './routes/clientes/$customerId/editar'
 import { Route as MotocicletasMotorcycleIdIndexRouteImport } from './routes/motocicletas/$motorcycleId/index'
 import { Route as MotocicletasMotorcycleIdEditarRouteImport } from './routes/motocicletas/$motorcycleId/editar'
+import { Route as PedidosOrderIdEditarRouteImport } from './routes/pedidos/$orderId/editar'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const R404Route = R404RouteImport.update({
+  id: '/404',
+  path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -98,53 +105,64 @@ const MotocicletasMotorcycleIdEditarRoute =
     path: '/motocicletas/$motorcycleId/editar',
     getParentRoute: () => rootRouteImport,
   } as any)
+const PedidosOrderIdEditarRoute = PedidosOrderIdEditarRouteImport.update({
+  id: '/editar',
+  path: '/editar',
+  getParentRoute: () => PedidosOrderIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
   '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
   '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
+  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
   '/clientes/$customerId/': typeof ClientesCustomerIdIndexRoute
   '/motocicletas/$motorcycleId/': typeof MotocicletasMotorcycleIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes': typeof ClientesIndexRoute
   '/motocicletas': typeof MotocicletasIndexRoute
   '/pedidos': typeof PedidosIndexRoute
   '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
   '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
+  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
   '/clientes/$customerId': typeof ClientesCustomerIdIndexRoute
   '/motocicletas/$motorcycleId': typeof MotocicletasMotorcycleIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/404': typeof R404Route
   '/dashboard': typeof DashboardRoute
   '/clientes/novo': typeof ClientesNovoRoute
   '/motocicletas/nova': typeof MotocicletasNovaRoute
   '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/pedidos/$orderId': typeof PedidosOrderIdRoute
+  '/pedidos/$orderId': typeof PedidosOrderIdRouteWithChildren
   '/pedidos/novo': typeof PedidosNovoRoute
   '/clientes/': typeof ClientesIndexRoute
   '/motocicletas/': typeof MotocicletasIndexRoute
   '/pedidos/': typeof PedidosIndexRoute
   '/clientes/$customerId/editar': typeof ClientesCustomerIdEditarRoute
   '/motocicletas/$motorcycleId/editar': typeof MotocicletasMotorcycleIdEditarRoute
+  '/pedidos/$orderId/editar': typeof PedidosOrderIdEditarRoute
   '/clientes/$customerId/': typeof ClientesCustomerIdIndexRoute
   '/motocicletas/$motorcycleId/': typeof MotocicletasMotorcycleIdIndexRoute
 }
@@ -152,6 +170,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/404'
     | '/dashboard'
     | '/clientes/novo'
     | '/motocicletas/nova'
@@ -163,11 +182,13 @@ export interface FileRouteTypes {
     | '/pedidos/'
     | '/clientes/$customerId/editar'
     | '/motocicletas/$motorcycleId/editar'
+    | '/pedidos/$orderId/editar'
     | '/clientes/$customerId/'
     | '/motocicletas/$motorcycleId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/404'
     | '/dashboard'
     | '/clientes/novo'
     | '/motocicletas/nova'
@@ -179,11 +200,13 @@ export interface FileRouteTypes {
     | '/pedidos'
     | '/clientes/$customerId/editar'
     | '/motocicletas/$motorcycleId/editar'
+    | '/pedidos/$orderId/editar'
     | '/clientes/$customerId'
     | '/motocicletas/$motorcycleId'
   id:
     | '__root__'
     | '/'
+    | '/404'
     | '/dashboard'
     | '/clientes/novo'
     | '/motocicletas/nova'
@@ -195,17 +218,19 @@ export interface FileRouteTypes {
     | '/pedidos/'
     | '/clientes/$customerId/editar'
     | '/motocicletas/$motorcycleId/editar'
+    | '/pedidos/$orderId/editar'
     | '/clientes/$customerId/'
     | '/motocicletas/$motorcycleId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  R404Route: typeof R404Route
   DashboardRoute: typeof DashboardRoute
   ClientesNovoRoute: typeof ClientesNovoRoute
   MotocicletasNovaRoute: typeof MotocicletasNovaRoute
   MotocicletasRegistrarChegadaRoute: typeof MotocicletasRegistrarChegadaRoute
-  PedidosOrderIdRoute: typeof PedidosOrderIdRoute
+  PedidosOrderIdRoute: typeof PedidosOrderIdRouteWithChildren
   PedidosNovoRoute: typeof PedidosNovoRoute
   ClientesIndexRoute: typeof ClientesIndexRoute
   MotocicletasIndexRoute: typeof MotocicletasIndexRoute
@@ -223,6 +248,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/404': {
+      id: '/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -316,16 +348,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MotocicletasMotorcycleIdEditarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pedidos/$orderId/editar': {
+      id: '/pedidos/$orderId/editar'
+      path: '/editar'
+      fullPath: '/pedidos/$orderId/editar'
+      preLoaderRoute: typeof PedidosOrderIdEditarRouteImport
+      parentRoute: typeof PedidosOrderIdRoute
+    }
   }
 }
 
+interface PedidosOrderIdRouteChildren {
+  PedidosOrderIdEditarRoute: typeof PedidosOrderIdEditarRoute
+}
+
+const PedidosOrderIdRouteChildren: PedidosOrderIdRouteChildren = {
+  PedidosOrderIdEditarRoute: PedidosOrderIdEditarRoute,
+}
+
+const PedidosOrderIdRouteWithChildren = PedidosOrderIdRoute._addFileChildren(
+  PedidosOrderIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  R404Route: R404Route,
   DashboardRoute: DashboardRoute,
   ClientesNovoRoute: ClientesNovoRoute,
   MotocicletasNovaRoute: MotocicletasNovaRoute,
   MotocicletasRegistrarChegadaRoute: MotocicletasRegistrarChegadaRoute,
-  PedidosOrderIdRoute: PedidosOrderIdRoute,
+  PedidosOrderIdRoute: PedidosOrderIdRouteWithChildren,
   PedidosNovoRoute: PedidosNovoRoute,
   ClientesIndexRoute: ClientesIndexRoute,
   MotocicletasIndexRoute: MotocicletasIndexRoute,

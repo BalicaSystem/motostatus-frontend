@@ -1,60 +1,60 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Button } from '#/components/ui/button'
+import { Button } from "#/components/ui/button";
 
 type CustomerPaginationProps = {
-  page: number
-  totalPages: number
-  total: number
-  perPage: number
-  onPageChange: (page: number) => void
-}
+	page: number;
+	totalPages: number;
+	total: number;
+	perPage: number;
+	onPageChange: (page: number) => void;
+};
 
 export function CustomerPagination({
-  page,
-  totalPages,
-  total,
-  perPage,
-  onPageChange,
+	page,
+	totalPages,
+	total,
+	perPage,
+	onPageChange,
 }: CustomerPaginationProps) {
-  if (total === 0) {
-    return null
-  }
+	if (total === 0) {
+		return null;
+	}
 
-  const start = (page - 1) * perPage + 1
-  const end = Math.min(page * perPage, total)
+	const start = (page - 1) * perPage + 1;
+	const end = Math.min(page * perPage, total);
 
-  return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <p className="text-sm text-muted-foreground">
-        Exibindo {start}–{end} de {total} clientes
-      </p>
+	return (
+		<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<p className="text-sm text-muted-foreground">
+				Exibindo {start}–{end} de {total} clientes
+			</p>
 
-      <div className="flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page <= 1}
-          onClick={() => onPageChange(page - 1)}
-        >
-          <ChevronLeft />
-          Anterior
-        </Button>
+			<div className="flex items-center gap-2">
+				<Button
+					variant="outline"
+					size="sm"
+					disabled={page <= 1}
+					onClick={() => onPageChange(page - 1)}
+				>
+					<ChevronLeft />
+					Anterior
+				</Button>
 
-        <span className="text-sm text-muted-foreground">
-          Página {page} de {totalPages}
-        </span>
+				<span className="text-sm text-muted-foreground">
+					Página {page} de {totalPages}
+				</span>
 
-        <Button
-          variant="outline"
-          size="sm"
-          disabled={page >= totalPages}
-          onClick={() => onPageChange(page + 1)}
-        >
-          Próxima
-          <ChevronRight />
-        </Button>
-      </div>
-    </div>
-  )
+				<Button
+					variant="outline"
+					size="sm"
+					disabled={page >= totalPages}
+					onClick={() => onPageChange(page + 1)}
+				>
+					Próxima
+					<ChevronRight />
+				</Button>
+			</div>
+		</div>
+	);
 }

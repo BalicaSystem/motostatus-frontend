@@ -1,205 +1,262 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowLeft, Pencil } from 'lucide-react'
-
-import { PageContainer } from '#/components/layout/page-container'
-import { PageHeader } from '#/components/layout/page-header'
-import { Button } from '#/components/ui/button'
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeft, Pencil, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { PageContainer } from "#/components/layout/page-container";
+import { PageHeader } from "#/components/layout/page-header";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '#/components/ui/card'
-import { Separator } from '#/components/ui/separator'
-import { Skeleton } from '#/components/ui/skeleton'
-import { useCustomer } from '#/features/customers/hooks/use-customer'
-import { formatDateTime } from '#/lib/formatDateTime'
+	AlertDialog,
+	AlertDialogActions,
+	AlertDialogPopup,
+	AlertDialogTitle,
+} from "#/components/ui/alert-dialog";
+import { Button } from "#/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "#/components/ui/card";
+import { Separator } from "#/components/ui/separator";
+import { Skeleton } from "#/components/ui/skeleton";
+import { useCustomer } from "#/features/customers/hooks/use-customer";
+import { useDeleteCustomer } from "#/features/customers/hooks/use-delete-customer";
+import { formatDateTime } from "#/lib/formatDateTime";
 
-export const Route = createFileRoute('/clientes/$customerId/')({
-  component: CustomerDetailsPage,
-})
+export const Route = createFileRoute("/clientes/$customerId/")({
+	component: CustomerDetailsPage,
+});
 
 function CustomerDetailsPage() {
-  const { customerId } = Route.useParams()
-  const { data, isLoading, isError } = useCustomer(customerId)
+	const navigate = useNavigate();
+	const { customerId } = Route.useParams();
+	const { data, isLoading, isError } = useCustomer(customerId);
+	const deleteCustomer = useDeleteCustomer();
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  if (isLoading) {
-    return (
-      <PageContainer>
-        <PageHeader
-          title="Cliente"
-          description="Visualização dos dados do cliente."
-        />
+	async function handleDeleteCustomer() {
+		try {
+			await deleteCustomer.mutateAsync(customerId);
 
-        <CustomerDetailsSkeleton />
-      </PageContainer>
-    )
-  }
+			toast.success("Cliente excluído com sucesso", {
+				description: "O cliente foi removido.",
+			});
 
-  if (isError || !data) {
-    return (
-      <PageContainer>
-        <PageHeader
-          title="Cliente"
-          description="Visualização dos dados do cliente."
-        />
+			await navigate({ to: "/clientes", search: { page: 1 } });
+		} catch (error) {
+			toast.error("Não foi possível excluir o cliente", {
+				description:
+					error instanceof Error ? error.message : "Tente novamente.",
+			});
+		} finally {
+			setDeleteDialogOpen(false);
+		}
+	}
 
-        <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
-          <p className="text-sm text-muted-foreground">
-            Não foi possível carregar o cliente.
-          </p>
-        </div>
-      </PageContainer>
-    )
-  }
+	if (isLoading) {
+		return (
+			<PageContainer>
+				<PageHeader
+					title="Cliente"
+					description="Visualização dos dados do cliente."
+				/>
 
-  const { customer } = data
+				<CustomerDetailsSkeleton />
+			</PageContainer>
+		);
+	}
 
-  return (
-    <PageContainer>
-      <PageHeader
-        title={customer.name}
-        description="Visualização dos dados do cliente."
-        actions={
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={
-                <Link
-                  to="/clientes/$customerId"
-                  params={{ customerId: customer.id }}
-                />
-              }
-            >
-              <Pencil className="size-4" />
-              Editar
-            </Button>
+	if (isError || !data) {
+		return (
+			<PageContainer>
+				<PageHeader
+					title="Cliente"
+					description="Visualização dos dados do cliente."
+				/>
 
-            <Button
-              variant="outline"
-              nativeButton={false}
-              render={<Link to="/clientes" search={{ page: 1 }} />}
-            >
-              <ArrowLeft className="size-4" />
-              Voltar
-            </Button>
-          </div>
-        }
-      />
+				<div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed">
+					<p className="text-sm text-destructive">
+						Não foi possível carregar o cliente.
+					</p>
+				</div>
+			</PageContainer>
+		);
+	}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Dados do cliente</CardTitle>
-            <CardDescription>
-              Informações cadastradas do cliente.
-            </CardDescription>
-          </CardHeader>
+	const { customer } = data;
 
-          <CardContent className="space-y-5">
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Nome
-              </p>
-              <p className="font-medium">{customer.name}</p>
-            </div>
+	return (
+		<PageContainer>
+			<PageHeader
+				title={customer.name}
+				description="Visualização dos dados do cliente."
+				actions={
+					<div className="flex items-center gap-2">
+						<Button
+							variant="outline"
+							nativeButton={false}
+							render={
+								<Link
+									to="/clientes/$customerId/editar"
+									params={{ customerId: customer.id }}
+								/>
+							}
+						>
+							<Pencil className="size-4" />
+							Editar
+						</Button>
 
-            <div>
-              <p className="text-sm text-muted-foreground">
-                CPF/CNPJ
-              </p>
-              <p className="font-mono text-sm">
-                {customer.document}
-              </p>
-            </div>
+						<Button
+							variant="outline"
+							className="text-destructive hover:text-destructive"
+							disabled={deleteCustomer.isPending}
+							onClick={() => setDeleteDialogOpen(true)}
+						>
+							<Trash2 className="size-4" />
+							Excluir
+						</Button>
 
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Cidade
-              </p>
-              <p className="font-medium">{customer.city}</p>
-            </div>
+						<Button
+							variant="outline"
+							nativeButton={false}
+							render={<Link to="/clientes" search={{ page: 1 }} />}
+						>
+							<ArrowLeft className="size-4" />
+							Voltar
+						</Button>
+					</div>
+				}
+			/>
 
-            <Separator />
+			<div className="grid gap-6 lg:grid-cols-2">
+				<Card>
+					<CardHeader>
+						<CardTitle>Dados do cliente</CardTitle>
+						<CardDescription>
+							Informações cadastradas do cliente.
+						</CardDescription>
+					</CardHeader>
 
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Cadastrado em
-              </p>
-              <p className="font-medium">
-                {formatDateTime(customer.createdAt)}
-              </p>
-            </div>
+					<CardContent className="space-y-5">
+						<div>
+							<p className="text-sm text-muted-foreground">Nome</p>
+							<p className="font-medium">{customer.name}</p>
+						</div>
 
-            <div>
-              <p className="text-sm text-muted-foreground">
-                Última atualização
-              </p>
-              <p className="font-medium">
-                {formatDateTime(customer.updatedAt)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+						<div>
+							<p className="text-sm text-muted-foreground">CPF/CNPJ</p>
+							<p className="font-mono text-sm">{customer.document}</p>
+						</div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Identificação</CardTitle>
-            <CardDescription>
-              Identificador interno do cliente.
-            </CardDescription>
-          </CardHeader>
+						<div>
+							<p className="text-sm text-muted-foreground">Cidade</p>
+							<p className="font-medium">{customer.city}</p>
+						</div>
 
-          <CardContent>
-            <div>
-              <p className="text-sm text-muted-foreground">
-                ID do cliente
-              </p>
-              <p className="break-all font-mono text-xs">
-                {customer.id}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </PageContainer>
-  )
+						<Separator />
+
+						<div>
+							<p className="text-sm text-muted-foreground">Cadastrado em</p>
+							<p className="font-medium">
+								{formatDateTime(customer.createdAt)}
+							</p>
+						</div>
+
+						<div>
+							<p className="text-sm text-muted-foreground">
+								Última atualização
+							</p>
+							<p className="font-medium">
+								{formatDateTime(customer.updatedAt)}
+							</p>
+						</div>
+					</CardContent>
+				</Card>
+
+				<Card>
+					<CardHeader>
+						<CardTitle>Identificação</CardTitle>
+						<CardDescription>Identificador interno do cliente.</CardDescription>
+					</CardHeader>
+
+					<CardContent>
+						<div>
+							<p className="text-sm text-muted-foreground">ID do cliente</p>
+							<p className="break-all font-mono text-xs">{customer.id}</p>
+						</div>
+					</CardContent>
+				</Card>
+			</div>
+
+			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+				<AlertDialogPopup>
+					<AlertDialogTitle>Excluir cliente</AlertDialogTitle>
+
+					<p className="text-sm text-muted-foreground">
+						Esta ação removerá o cliente do sistema. Deseja continuar?
+					</p>
+
+					<AlertDialogActions>
+						<AlertDialog.Close
+							render={
+								<Button variant="outline" disabled={deleteCustomer.isPending} />
+							}
+						>
+							Cancelar
+						</AlertDialog.Close>
+
+						<AlertDialog.Close
+							render={
+								<Button
+									variant="destructive"
+									disabled={deleteCustomer.isPending}
+									onClick={handleDeleteCustomer}
+								/>
+							}
+						>
+							<Trash2 className="size-4" />
+							Excluir
+						</AlertDialog.Close>
+					</AlertDialogActions>
+				</AlertDialogPopup>
+			</AlertDialog>
+		</PageContainer>
+	);
 }
 
 function CustomerDetailsSkeleton() {
-  return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-64" />
-        </CardHeader>
+	return (
+		<div className="grid gap-6 lg:grid-cols-2">
+			<Card>
+				<CardHeader>
+					<Skeleton className="h-6 w-40" />
+					<Skeleton className="h-4 w-64" />
+				</CardHeader>
 
-        <CardContent className="space-y-6">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="space-y-2">
-              <Skeleton className="h-4 w-32" />
-              <Skeleton className="h-5 w-48" />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+				<CardContent className="space-y-6">
+					{Array.from({ length: 5 }, (_, index) => index).map((item) => (
+						<div key={item} className="space-y-2">
+							<Skeleton className="h-4 w-32" />
+							<Skeleton className="h-5 w-48" />
+						</div>
+					))}
+				</CardContent>
+			</Card>
 
-      <Card>
-        <CardHeader>
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-4 w-56" />
-        </CardHeader>
+			<Card>
+				<CardHeader>
+					<Skeleton className="h-6 w-40" />
+					<Skeleton className="h-4 w-56" />
+				</CardHeader>
 
-        <CardContent>
-          <div className="space-y-2">
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-64" />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  )
+				<CardContent>
+					<div className="space-y-2">
+						<Skeleton className="h-4 w-24" />
+						<Skeleton className="h-4 w-64" />
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	);
 }

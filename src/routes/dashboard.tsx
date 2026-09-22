@@ -76,7 +76,7 @@ function DashboardPage() {
 								variant="outline"
 								size="sm"
 								className="mt-2 w-full"
-								render={<Link to={stat.href} />}
+								render={<Link to={stat.href} search={{ page: 1 }} />}
 							>
 								Ver detalhes
 							</Button>
