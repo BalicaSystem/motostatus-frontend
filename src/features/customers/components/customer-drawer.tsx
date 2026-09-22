@@ -12,6 +12,7 @@ import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
 import { Skeleton } from "#/components/ui/skeleton";
 import { formatDateTime } from "#/lib/formatDateTime";
+import { digitsOnly, maskDocument } from "#/lib/masks";
 import { getInitials } from "#/lib/utils";
 import { useCustomer } from "../hooks/use-customer";
 import { useUpdateCustomer } from "../hooks/use-update-customer";
@@ -195,8 +196,17 @@ export function CustomerDrawer({
 
 								<Input
 									id="customer-document"
+									name="document"
 									placeholder="CPF ou CNPJ"
-									{...form.register("document")}
+									inputMode="numeric"
+									maxLength={18}
+									value={maskDocument(form.watch("document"))}
+									onChange={(event) => {
+										form.setValue("document", digitsOnly(event.target.value), {
+											shouldValidate: true,
+											shouldDirty: true,
+										});
+									}}
 								/>
 
 								{form.formState.errors.document && (

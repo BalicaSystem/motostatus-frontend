@@ -1,10 +1,4 @@
-import {
-	ArrowRight,
-	MoreHorizontal,
-	Pencil,
-	Trash2,
-	Users,
-} from "lucide-react";
+import { ArrowRight, Trash2, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -16,12 +10,6 @@ import {
 } from "#/components/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "#/components/ui/avatar";
 import { Button } from "#/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "#/components/ui/dropdown-menu";
 import {
 	Table,
 	TableBody,
@@ -149,43 +137,18 @@ export function CustomerTable({ customers, onSelect }: CustomerTableProps) {
 										<span className="sr-only">Visualizar</span>
 									</Button>
 
-									<DropdownMenu>
-										<DropdownMenuTrigger
-											render={
-												<Button
-													variant="ghost"
-													size="icon-sm"
-													className="size-7"
-													onClick={(event) => event.stopPropagation()}
-												/>
-											}
-										>
-											<MoreHorizontal className="size-4" />
-											<span className="sr-only">Ações do cliente</span>
-										</DropdownMenuTrigger>
-
-										<DropdownMenuContent align="end">
-											<DropdownMenuItem onClick={() => onSelect(customer)}>
-												<ArrowRight />
-												Visualizar
-											</DropdownMenuItem>
-
-											<DropdownMenuItem
-												onClick={() => onSelect(customer, "edit")}
-											>
-												<Pencil />
-												Editar
-											</DropdownMenuItem>
-
-											<DropdownMenuItem
-												variant="destructive"
-												onClick={() => setCustomerToDelete(customer)}
-											>
-												<Trash2 />
-												Excluir
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+									<Button
+										variant="ghost"
+										size="icon-sm"
+										className="size-7 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+										onClick={(event) => {
+											event.stopPropagation();
+											setCustomerToDelete(customer);
+										}}
+									>
+										<Trash2 className="size-4" />
+										<span className="sr-only">Excluir cliente</span>
+									</Button>
 								</div>
 							</TableCell>
 						</TableRow>

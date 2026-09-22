@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button } from "#/components/ui/button";
 import { Field, FieldError, FieldLabel } from "#/components/ui/field";
 import { Input } from "#/components/ui/input";
+import { digitsOnly, maskDocument } from "#/lib/masks";
 import { useCreateCustomer } from "../hooks/use-create-customer";
 import {
 	type CustomerFormData,
@@ -70,8 +71,17 @@ export function CustomerCreateForm({ onClose }: CustomerCreateFormProps) {
 
 					<Input
 						id="document"
+						name="document"
 						placeholder="CPF ou CNPJ"
-						{...form.register("document")}
+						inputMode="numeric"
+						maxLength={18}
+						value={maskDocument(form.watch("document"))}
+						onChange={(event) => {
+							form.setValue("document", digitsOnly(event.target.value), {
+								shouldValidate: true,
+								shouldDirty: true,
+							});
+						}}
 					/>
 
 					{form.formState.errors.document && (

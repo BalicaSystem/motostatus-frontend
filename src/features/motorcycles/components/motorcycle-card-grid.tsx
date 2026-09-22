@@ -1,19 +1,6 @@
-import {
-	ArrowRight,
-	ArrowUpRight,
-	Bike,
-	MoreHorizontal,
-	Pencil,
-	Trash2,
-} from "lucide-react";
+import { ArrowUpRight, Bike, Trash2 } from "lucide-react";
 
 import { Button } from "#/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "#/components/ui/dropdown-menu";
 import { formatDate } from "#/lib/formatDate";
 import type { Motorcycle } from "../types/motorcycle";
 import { MotorcycleStatusBadge } from "./motorcycle-status-badge";
@@ -21,14 +8,12 @@ import { MotorcycleStatusBadge } from "./motorcycle-status-badge";
 type MotorcycleCardGridProps = {
 	motorcycles: Motorcycle[];
 	onSelect: (motorcycle: Motorcycle) => void;
-	onEdit: (motorcycle: Motorcycle) => void;
 	onDeleteRequest: (motorcycle: Motorcycle) => void;
 };
 
 export function MotorcycleCardGrid({
 	motorcycles,
 	onSelect,
-	onEdit,
 	onDeleteRequest,
 }: MotorcycleCardGridProps) {
 	if (motorcycles.length === 0) {
@@ -74,40 +59,15 @@ export function MotorcycleCardGrid({
 						<div className="flex shrink-0 items-center gap-1">
 							<MotorcycleStatusBadge status={motorcycle.status} />
 
-							<DropdownMenu>
-								<DropdownMenuTrigger
-									render={
-										<Button
-											variant="ghost"
-											size="icon-sm"
-											className="size-7 text-muted-foreground hover:bg-primary/10 hover:text-primary"
-										/>
-									}
-								>
-									<MoreHorizontal className="size-4" />
-									<span className="sr-only">Ações da motocicleta</span>
-								</DropdownMenuTrigger>
-
-								<DropdownMenuContent align="end">
-									<DropdownMenuItem onClick={() => onSelect(motorcycle)}>
-										<ArrowRight />
-										Visualizar
-									</DropdownMenuItem>
-
-									<DropdownMenuItem onClick={() => onEdit(motorcycle)}>
-										<Pencil />
-										Editar
-									</DropdownMenuItem>
-
-									<DropdownMenuItem
-										variant="destructive"
-										onClick={() => onDeleteRequest(motorcycle)}
-									>
-										<Trash2 />
-										Excluir
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
+							<Button
+								variant="ghost"
+								size="icon-sm"
+								className="size-7 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+								onClick={() => onDeleteRequest(motorcycle)}
+							>
+								<Trash2 className="size-4" />
+								<span className="sr-only">Excluir motocicleta</span>
+							</Button>
 						</div>
 					</div>
 

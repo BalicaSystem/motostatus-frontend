@@ -39,18 +39,14 @@ const statusOptions: FilterOption[] = [
 
 type MotorcycleStatusFilter = "all" | "in_transit" | "delayed" | "arrived";
 
-type MotorcycleSelection = {
-	entity: Motorcycle;
-	mode: "view" | "edit";
-};
-
 function MotorcyclesPage() {
 	const navigate = useNavigate();
 	const { page } = Route.useSearch();
 
 	const [statusFilter, setStatusFilter] =
 		useState<MotorcycleStatusFilter>("all");
-	const [selection, setSelection] = useState<MotorcycleSelection | null>(null);
+	const [selectedMotorcycle, setSelectedMotorcycle] =
+		useState<Motorcycle | null>(null);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [motorcycleToDelete, setMotorcycleToDelete] =
 		useState<Motorcycle | null>(null);
@@ -82,12 +78,7 @@ function MotorcyclesPage() {
 	}
 
 	function handleSelectMotorcycle(motorcycle: Motorcycle) {
-		setSelection({ entity: motorcycle, mode: "view" });
-		setDrawerOpen(true);
-	}
-
-	function handleEditMotorcycle(motorcycle: Motorcycle) {
-		setSelection({ entity: motorcycle, mode: "edit" });
+		setSelectedMotorcycle(motorcycle);
 		setDrawerOpen(true);
 	}
 
@@ -99,9 +90,9 @@ function MotorcyclesPage() {
 		try {
 			await deleteMotorcycle.mutateAsync(motorcycleToDelete.id);
 
-			if (selection?.entity.id === motorcycleToDelete.id) {
+			if (selectedMotorcycle?.id === motorcycleToDelete.id) {
 				setDrawerOpen(false);
-				setSelection(null);
+				setSelectedMotorcycle(null);
 			}
 
 			toast.success("Motocicleta excluída com sucesso", {
@@ -165,7 +156,6 @@ function MotorcyclesPage() {
 						<MotorcycleCardGrid
 							motorcycles={filteredMotorcycles}
 							onSelect={handleSelectMotorcycle}
-							onEdit={handleEditMotorcycle}
 							onDeleteRequest={setMotorcycleToDelete}
 						/>
 
@@ -183,13 +173,12 @@ function MotorcyclesPage() {
 			)}
 
 			<MotorcycleDrawer
-				motorcycleId={selection?.entity.id ?? null}
+				motorcycleId={selectedMotorcycle?.id ?? null}
 				open={drawerOpen}
 				onOpenChange={setDrawerOpen}
-				startInEdit={selection?.mode === "edit"}
 				onDeleteRequest={() => {
-					if (selection) {
-						setMotorcycleToDelete(selection.entity);
+					if (selectedMotorcycle) {
+						setMotorcycleToDelete(selectedMotorcycle);
 					}
 				}}
 			/>
