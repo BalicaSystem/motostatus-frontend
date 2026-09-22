@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Plus, QrCode } from "lucide-react";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
+import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
 import { MotorcyclePagination } from "#/features/motorcycles/components/motorcycle-pagination";
 import { MotorcycleTable } from "#/features/motorcycles/components/motorcycle-table";
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/motocicletas/")({
 function MotorcyclesPage() {
 	const navigate = useNavigate();
 	const { page } = Route.useSearch();
-	const { data, isLoading, isFetching, isError } = useMotorcycles(page);
+	const { data, isLoading, isPlaceholderData, isError } = useMotorcycles(page);
 
 	function handlePageChange(nextPage: number) {
 		navigate({
@@ -71,13 +72,7 @@ function MotorcyclesPage() {
 					<div className="relative">
 						<MotorcycleTable motorcycles={data.motorcycles} />
 
-						{isFetching && (
-							<div className="absolute inset-0 flex items-start justify-center bg-background/40 pt-4 backdrop-blur-[1px]">
-								<div className="rounded-md border bg-background px-3 py-2 text-sm text-muted-foreground shadow-sm">
-									Atualizando...
-								</div>
-							</div>
-						)}
+						<TableSyncIndicator show={isPlaceholderData} />
 					</div>
 
 					<MotorcyclePagination

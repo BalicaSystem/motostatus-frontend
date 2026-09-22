@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
+import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
 import { OrderPagination } from "#/features/orders/components/order-pagination";
 import { OrderTable } from "#/features/orders/components/order-table";
@@ -13,7 +14,7 @@ export function OrdersPage() {
 	const navigate = useNavigate();
 	const { page } = useSearch({ strict: false });
 
-	const { data, isLoading, isFetching, isError } = useOrders(page);
+	const { data, isLoading, isPlaceholderData, isError } = useOrders(page);
 
 	function handlePageChange(nextPage: number) {
 		navigate({
@@ -52,13 +53,7 @@ export function OrdersPage() {
 					<div className="relative">
 						<OrderTable orders={data.orders} />
 
-						{isFetching && (
-							<div className="absolute inset-0 flex items-start justify-center bg-background/40 pt-4 backdrop-blur-[1px]">
-								<div className="rounded-md border bg-background px-3 py-2 text-sm text-muted-foreground shadow-sm">
-									Atualizando...
-								</div>
-							</div>
-						)}
+						<TableSyncIndicator show={isPlaceholderData} />
 					</div>
 
 					<OrderPagination
