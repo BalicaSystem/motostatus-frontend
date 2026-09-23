@@ -1,11 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Plus, QrCode, Trash2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
+import { SearchInput } from "#/components/search-input";
 import { type FilterOption, StatusFilter } from "#/components/status-filter";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import {
@@ -22,10 +23,18 @@ import { MotorcycleTableSkeleton } from "#/features/motorcycles/components/motor
 import { useDeleteMotorcycle } from "#/features/motorcycles/hooks/use-delete-motorcycle";
 import { useMotorcycles } from "#/features/motorcycles/hooks/use-motorcycles";
 import type { Motorcycle } from "#/features/motorcycles/types/motorcycle";
+import { useDebouncedValue } from "#/lib/use-debounced-value";
 
 export const Route = createFileRoute("/motocicletas/")({
 	validateSearch: (search) => ({
 		page: Number(search.page) || 1,
+		q: typeof search.q === "string" ? search.q.trim() : "",
+		status:
+			search.status === "in_transit" ||
+			search.status === "delayed" ||
+			search.status === "arrived"
+				? (search.status as Motorcycle["status"])
+				: undefined,
 	}),
 	component: MotorcyclesPage,
 });
@@ -37,42 +46,64 @@ const statusOptions: FilterOption[] = [
 	{ value: "arrived", label: "Chegadas" },
 ];
 
-type MotorcycleStatusFilter = "all" | "in_transit" | "delayed" | "arrived";
-
 function MotorcyclesPage() {
 	const navigate = useNavigate();
-	const { page } = Route.useSearch();
+	const { page, q, status } = Route.useSearch();
 
-	const [statusFilter, setStatusFilter] =
-		useState<MotorcycleStatusFilter>("all");
+	const [searchInput, setSearchInput] = useState(q);
+	const debouncedQ = useDebouncedValue(searchInput, 400);
+
 	const [selectedMotorcycle, setSelectedMotorcycle] =
 		useState<Motorcycle | null>(null);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [motorcycleToDelete, setMotorcycleToDelete] =
 		useState<Motorcycle | null>(null);
 
-	const { data, isLoading, isPlaceholderData, isError } = useMotorcycles(page);
+	const { data, isLoading, isPlaceholderData, isError } = useMotorcycles(
+		page,
+		q,
+		status,
+	);
 	const deleteMotorcycle = useDeleteMotorcycle();
 
-	const filteredMotorcycles = useMemo(() => {
-		if (!data) {
-			return [];
-		}
+	useEffect(() => {
+		setSearchInput(q);
+	}, [q]);
 
-		if (statusFilter === "all") {
-			return data.motorcycles;
+	useEffect(() => {
+		if (debouncedQ !== q) {
+			navigate({
+				to: "/motocicletas",
+				search: {
+					page: 1,
+					q: debouncedQ,
+					status,
+				},
+			});
 		}
-
-		return data.motorcycles.filter(
-			(motorcycle) => motorcycle.status === statusFilter,
-		);
-	}, [data, statusFilter]);
+	}, [debouncedQ, q, status, navigate]);
 
 	function handlePageChange(nextPage: number) {
 		navigate({
 			to: "/motocicletas",
 			search: {
 				page: nextPage,
+				q,
+				status,
+			},
+		});
+	}
+
+	function handleStatusChange(nextStatus: string) {
+		const value =
+			nextStatus === "all" ? undefined : (nextStatus as Motorcycle["status"]);
+
+		navigate({
+			to: "/motocicletas",
+			search: {
+				page: 1,
+				q,
+				status: value,
 			},
 		});
 	}
@@ -132,6 +163,21 @@ function MotorcyclesPage() {
 				}
 			/>
 
+			<div className="flex flex-wrap items-center gap-3">
+				<SearchInput
+					value={searchInput}
+					onChange={setSearchInput}
+					placeholder="Buscar por modelo ou chassi..."
+					className="max-w-80"
+				/>
+
+				<StatusFilter
+					options={statusOptions}
+					value={status ?? "all"}
+					onChange={handleStatusChange}
+				/>
+			</div>
+
 			{isLoading && <MotorcycleTableSkeleton />}
 
 			{isError && (
@@ -144,17 +190,9 @@ function MotorcyclesPage() {
 
 			{data && (
 				<div className="space-y-3">
-					<StatusFilter
-						options={statusOptions}
-						value={statusFilter as string}
-						onChange={(value) =>
-							setStatusFilter(value as MotorcycleStatusFilter)
-						}
-					/>
-
 					<div className="relative">
 						<MotorcycleCardGrid
-							motorcycles={filteredMotorcycles}
+							motorcycles={data.motorcycles}
 							onSelect={handleSelectMotorcycle}
 							onDeleteRequest={setMotorcycleToDelete}
 						/>

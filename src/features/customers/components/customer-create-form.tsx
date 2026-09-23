@@ -40,7 +40,7 @@ export function CustomerCreateForm({ onClose }: CustomerCreateFormProps) {
 
 			onClose();
 
-			await navigate({ to: "/clientes", search: { page: 1 } });
+			await navigate({ to: "/clientes", search: { page: 1, q: "" } });
 		} catch (error) {
 			toast.error("Não foi possível cadastrar o cliente", {
 				description:

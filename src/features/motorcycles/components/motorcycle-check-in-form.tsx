@@ -96,7 +96,10 @@ export function MotorcycleCheckInForm() {
 						<Button
 							type="button"
 							onClick={() =>
-								navigate({ to: "/motocicletas", search: { page: 1 } })
+								navigate({
+									to: "/motocicletas",
+									search: { page: 1, q: "", status: undefined },
+								})
 							}
 						>
 							Voltar para estoque

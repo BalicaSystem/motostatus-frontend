@@ -28,14 +28,21 @@ export type UpdateCustomerInput = {
 export async function getCustomers(
 	page = 1,
 	perPage = 20,
+	q?: string,
 	signal?: AbortSignal,
 ) {
-	return api<GetCustomersResponse>(
-		`/customers?page=${page}&perPage=${perPage}`,
-		{
-			signal,
-		},
-	);
+	const params = new URLSearchParams({
+		page: String(page),
+		perPage: String(perPage),
+	});
+
+	if (q) {
+		params.set("q", q);
+	}
+
+	return api<GetCustomersResponse>(`/customers?${params.toString()}`, {
+		signal,
+	});
 }
 
 export async function getCustomer(id: string, signal?: AbortSignal) {

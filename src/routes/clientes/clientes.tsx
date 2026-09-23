@@ -1,10 +1,11 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { openCreateDrawer } from "#/components/create-drawers";
 import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
+import { SearchInput } from "#/components/search-input";
 import { TableSyncIndicator } from "#/components/table-sync-indicator";
 import { Button } from "#/components/ui/button";
 import { CustomerDrawer } from "#/features/customers/components/customer-drawer";
@@ -13,23 +14,44 @@ import { CustomerTable } from "#/features/customers/components/customer-table";
 import { CustomerTableSkeleton } from "#/features/customers/components/customer-table-skeleton";
 import { useCustomers } from "#/features/customers/hooks/use-customers";
 import type { Customer } from "#/features/customers/types/customer";
+import { useDebouncedValue } from "#/lib/use-debounced-value";
 
 export function CustomersPage() {
 	const navigate = useNavigate();
-	const { page } = useSearch({ strict: false });
+	const { page = 1, q = "" } = useSearch({ strict: false });
+
+	const [searchInput, setSearchInput] = useState(q);
+	const debouncedQ = useDebouncedValue(searchInput, 400);
 
 	const [selection, setSelection] = useState<{
 		customer: Customer;
 		mode: "view" | "edit";
 	} | null>(null);
 
-	const { data, isLoading, isPlaceholderData, isError } = useCustomers(page);
+	const { data, isLoading, isPlaceholderData, isError } = useCustomers(page, q);
+
+	useEffect(() => {
+		setSearchInput(q);
+	}, [q]);
+
+	useEffect(() => {
+		if (debouncedQ !== q) {
+			navigate({
+				to: "/clientes",
+				search: {
+					page: 1,
+					q: debouncedQ,
+				},
+			});
+		}
+	}, [debouncedQ, q, navigate]);
 
 	function handlePageChange(nextPage: number) {
 		navigate({
 			to: "/clientes",
 			search: {
 				page: nextPage,
+				q,
 			},
 		});
 	}
@@ -52,6 +74,13 @@ export function CustomersPage() {
 						Novo cliente
 					</Button>
 				}
+			/>
+
+			<SearchInput
+				value={searchInput}
+				onChange={setSearchInput}
+				placeholder="Buscar por nome, CPF ou cidade..."
+				className="max-w-80"
 			/>
 
 			{isLoading && <CustomerTableSkeleton />}

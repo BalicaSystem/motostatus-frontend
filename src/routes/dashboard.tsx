@@ -148,7 +148,12 @@ function DashboardPage() {
 							variant="ghost"
 							size="sm"
 							className="text-muted-foreground"
-							render={<Link to="/motocicletas" search={{ page: 1 }} />}
+							render={
+								<Link
+									to="/motocicletas"
+									search={{ page: 1, q: "", status: undefined }}
+								/>
+							}
 						>
 							Ver todas
 							<ArrowRight />
@@ -238,7 +243,7 @@ function DashboardPage() {
 							variant="ghost"
 							size="sm"
 							className="text-muted-foreground"
-							render={<Link to="/pedidos" search={{ page: 1 }} />}
+							render={<Link to="/pedidos" search={{ page: 1, q: "" }} />}
 						>
 							Ver todos
 							<ArrowRight />

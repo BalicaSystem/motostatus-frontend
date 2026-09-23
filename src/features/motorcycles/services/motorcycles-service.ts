@@ -33,12 +33,26 @@ export type CheckInMotorcycleInput = {
 export async function getMotorcycles(
 	page = 1,
 	perPage = 20,
+	q?: string,
+	status?: Motorcycle["status"],
 	signal?: AbortSignal,
 ) {
-	return api<GetMotorcyclesResponse>(
-		`/motorcycles?page=${page}&perPage=${perPage}`,
-		{ signal },
-	);
+	const params = new URLSearchParams({
+		page: String(page),
+		perPage: String(perPage),
+	});
+
+	if (q) {
+		params.set("q", q);
+	}
+
+	if (status) {
+		params.set("status", status);
+	}
+
+	return api<GetMotorcyclesResponse>(`/motorcycles?${params.toString()}`, {
+		signal,
+	});
 }
 
 export async function getMotorcycle(id: string, signal?: AbortSignal) {

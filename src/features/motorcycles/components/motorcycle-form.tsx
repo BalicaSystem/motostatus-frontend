@@ -47,7 +47,7 @@ export function MotorcycleForm({ onClose }: MotorcycleFormProps) {
 
 			await navigate({
 				to: "/motocicletas",
-				search: { page: 1 },
+				search: { page: 1, q: "", status: undefined },
 			});
 		} catch (error) {
 			toast.error("Não foi possível cadastrar a motocicleta", {

@@ -21,6 +21,9 @@ import {
 	DialogTitle,
 } from "#/components/ui/dialog";
 import { Input } from "#/components/ui/input";
+import { customersQueryKey } from "#/features/customers/hooks/use-customers";
+import { motorcyclesQueryKey } from "#/features/motorcycles/hooks/use-motorcycles";
+import { ordersQueryKey } from "#/features/orders/hooks/use-orders";
 import { queryClient } from "#/lib/api/query-client";
 
 const OPEN_EVENT = "motostatus:open-command";
@@ -112,15 +115,15 @@ const staticCommands: CommandItem[] = [
 function getRecentCommands(): CommandItem[] {
 	const customers = queryClient.getQueryData<{
 		customers: { id: string; name: string }[];
-	}>(["customers", 1]);
+	}>(customersQueryKey(1, ""));
 
 	const motorcycles = queryClient.getQueryData<{
 		motorcycles: { id: string; model: string }[];
-	}>(["motorcycles", 1]);
+	}>(motorcyclesQueryKey(1, ""));
 
 	const orders = queryClient.getQueryData<{
 		orders: { id: string; customer: { name: string } }[];
-	}>(["orders", 1]);
+	}>(ordersQueryKey(1, ""));
 
 	const items: CommandItem[] = [];
 

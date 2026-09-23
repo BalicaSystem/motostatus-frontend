@@ -78,7 +78,7 @@ export function OrderCreateForm({ onClose }: OrderCreateFormProps) {
 
 			onClose();
 
-			await navigate({ to: "/pedidos", search: { page: 1 } });
+			await navigate({ to: "/pedidos", search: { page: 1, q: "" } });
 		} catch (error) {
 			toast.error("Não foi possível criar o pedido", {
 				description:

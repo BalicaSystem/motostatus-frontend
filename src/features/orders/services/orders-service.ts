@@ -24,8 +24,22 @@ export type UpdateOrderItemInput = {
 	registrationDate?: string | null;
 };
 
-export async function getOrders(page = 1, perPage = 20, signal?: AbortSignal) {
-	return api<GetOrdersResponse>(`/orders?page=${page}&perPage=${perPage}`, {
+export async function getOrders(
+	page = 1,
+	perPage = 20,
+	q?: string,
+	signal?: AbortSignal,
+) {
+	const params = new URLSearchParams({
+		page: String(page),
+		perPage: String(perPage),
+	});
+
+	if (q) {
+		params.set("q", q);
+	}
+
+	return api<GetOrdersResponse>(`/orders?${params.toString()}`, {
 		signal,
 	});
 }
