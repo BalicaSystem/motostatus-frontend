@@ -3,8 +3,11 @@ import { createFileRoute } from "@tanstack/react-router";
 
 const SESSION_COOKIE_NAME = "ms.session";
 const USER_COOKIE_NAME = "ms.user";
-const API_BASE_URL = process.env.MOTOSTATUS_API_URL ?? "http://localhost:3333";
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+
+function getApiBaseUrl(): string {
+	return process.env.MOTOSTATUS_API_URL ?? "http://localhost:3333";
+}
 
 interface LoginUser {
 	id: string;
@@ -32,10 +35,8 @@ function parseCookies(request: Request): Record<string, string> {
 	);
 }
 
-function cookieAttrs(maxAge: number) {
-	return `path=/; Max-Age=${maxAge}; SameSite=Lax${
-		process.env.NODE_ENV === "production" ? "; Secure" : ""
-	}`;
+function cookieAttrs(maxAge: number, secure: boolean) {
+	return `path=/; Max-Age=${maxAge}; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 
 function toResponse(body: unknown, status: number, setCookies: string[]) {
@@ -63,9 +64,10 @@ export const Route = createFileRoute("/api/$")({
 				const url = new URL(request.url);
 				const backendPath = url.pathname;
 				const cookies = parseCookies(request);
+				const isSecure = url.protocol === "https:";
 
 				if (backendPath === "/api/auth/login" && request.method === "POST") {
-					const response = await fetch(`${API_BASE_URL}${backendPath}`, {
+					const response = await fetch(`${getApiBaseUrl()}${backendPath}`, {
 						method: "POST",
 						headers: {
 							"Content-Type":
@@ -92,8 +94,8 @@ export const Route = createFileRoute("/api/$")({
 					}
 
 					const setCookies = [
-						`${SESSION_COOKIE_NAME}=${payload.token}; HttpOnly; ${cookieAttrs(COOKIE_MAX_AGE)}`,
-						`${USER_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(payload.user))}; ${cookieAttrs(COOKIE_MAX_AGE)}`,
+						`${SESSION_COOKIE_NAME}=${payload.token}; HttpOnly; ${cookieAttrs(COOKIE_MAX_AGE, isSecure)}`,
+						`${USER_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(payload.user))}; ${cookieAttrs(COOKIE_MAX_AGE, isSecure)}`,
 					];
 
 					return toResponse(
@@ -130,7 +132,7 @@ export const Route = createFileRoute("/api/$")({
 				}
 
 				const proxied = await fetch(
-					`${API_BASE_URL}${backendPath}${url.search}`,
+					`${getApiBaseUrl()}${backendPath}${url.search}`,
 					{
 						method: request.method,
 						headers: forwardedHeaders,
