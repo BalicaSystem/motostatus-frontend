@@ -9,181 +9,247 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as R404RouteImport } from './routes/404'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ClientesIndexRouteImport } from './routes/clientes/index'
-import { Route as MotocicletasIndexRouteImport } from './routes/motocicletas/index'
-import { Route as MotocicletasRegistrarChegadaRouteImport } from './routes/motocicletas/registrar-chegada'
-import { Route as PedidosIndexRouteImport } from './routes/pedidos/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as App404RouteImport } from './routes/_app/404'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as ApiSplatRouteImport } from './routes/api/$'
+import { Route as AppClientesIndexRouteImport } from './routes/_app/clientes/index'
+import { Route as AppMotocicletasIndexRouteImport } from './routes/_app/motocicletas/index'
+import { Route as AppMotocicletasRegistrarChegadaRouteImport } from './routes/_app/motocicletas/registrar-chegada'
+import { Route as AppPedidosIndexRouteImport } from './routes/_app/pedidos/index'
 
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const R404Route = R404RouteImport.update({
+const App404Route = App404RouteImport.update({
   id: '/404',
   path: '/404',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
+const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const ApiSplatRoute = ApiSplatRouteImport.update({
+  id: '/api/$',
+  path: '/api/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClientesIndexRoute = ClientesIndexRouteImport.update({
+const AppClientesIndexRoute = AppClientesIndexRouteImport.update({
   id: '/clientes/',
   path: '/clientes/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const MotocicletasIndexRoute = MotocicletasIndexRouteImport.update({
+const AppMotocicletasIndexRoute = AppMotocicletasIndexRouteImport.update({
   id: '/motocicletas/',
   path: '/motocicletas/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
-const MotocicletasRegistrarChegadaRoute =
-  MotocicletasRegistrarChegadaRouteImport.update({
+const AppMotocicletasRegistrarChegadaRoute =
+  AppMotocicletasRegistrarChegadaRouteImport.update({
     id: '/motocicletas/registrar-chegada',
     path: '/motocicletas/registrar-chegada',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AppRoute,
   } as any)
-const PedidosIndexRoute = PedidosIndexRouteImport.update({
+const AppPedidosIndexRoute = AppPedidosIndexRouteImport.update({
   id: '/pedidos/',
   path: '/pedidos/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/404': typeof R404Route
-  '/dashboard': typeof DashboardRoute
-  '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/clientes/': typeof ClientesIndexRoute
-  '/motocicletas/': typeof MotocicletasIndexRoute
-  '/pedidos/': typeof PedidosIndexRoute
+  '/': typeof AppIndexRoute
+  '/login': typeof LoginRoute
+  '/404': typeof App404Route
+  '/dashboard': typeof AppDashboardRoute
+  '/api/$': typeof ApiSplatRoute
+  '/motocicletas/registrar-chegada': typeof AppMotocicletasRegistrarChegadaRoute
+  '/clientes/': typeof AppClientesIndexRoute
+  '/motocicletas/': typeof AppMotocicletasIndexRoute
+  '/pedidos/': typeof AppPedidosIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/404': typeof R404Route
-  '/dashboard': typeof DashboardRoute
-  '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/clientes': typeof ClientesIndexRoute
-  '/motocicletas': typeof MotocicletasIndexRoute
-  '/pedidos': typeof PedidosIndexRoute
+  '/login': typeof LoginRoute
+  '/404': typeof App404Route
+  '/dashboard': typeof AppDashboardRoute
+  '/api/$': typeof ApiSplatRoute
+  '/': typeof AppIndexRoute
+  '/motocicletas/registrar-chegada': typeof AppMotocicletasRegistrarChegadaRoute
+  '/clientes': typeof AppClientesIndexRoute
+  '/motocicletas': typeof AppMotocicletasIndexRoute
+  '/pedidos': typeof AppPedidosIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/404': typeof R404Route
-  '/dashboard': typeof DashboardRoute
-  '/motocicletas/registrar-chegada': typeof MotocicletasRegistrarChegadaRoute
-  '/clientes/': typeof ClientesIndexRoute
-  '/motocicletas/': typeof MotocicletasIndexRoute
-  '/pedidos/': typeof PedidosIndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_app/404': typeof App404Route
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/api/$': typeof ApiSplatRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/motocicletas/registrar-chegada': typeof AppMotocicletasRegistrarChegadaRoute
+  '/_app/clientes/': typeof AppClientesIndexRoute
+  '/_app/motocicletas/': typeof AppMotocicletasIndexRoute
+  '/_app/pedidos/': typeof AppPedidosIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/404'
     | '/dashboard'
+    | '/api/$'
     | '/motocicletas/registrar-chegada'
     | '/clientes/'
     | '/motocicletas/'
     | '/pedidos/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/login'
     | '/404'
     | '/dashboard'
+    | '/api/$'
+    | '/'
     | '/motocicletas/registrar-chegada'
     | '/clientes'
     | '/motocicletas'
     | '/pedidos'
   id:
     | '__root__'
-    | '/'
-    | '/404'
-    | '/dashboard'
-    | '/motocicletas/registrar-chegada'
-    | '/clientes/'
-    | '/motocicletas/'
-    | '/pedidos/'
+    | '/_app'
+    | '/login'
+    | '/_app/404'
+    | '/_app/dashboard'
+    | '/api/$'
+    | '/_app/'
+    | '/_app/motocicletas/registrar-chegada'
+    | '/_app/clientes/'
+    | '/_app/motocicletas/'
+    | '/_app/pedidos/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  R404Route: typeof R404Route
-  DashboardRoute: typeof DashboardRoute
-  MotocicletasRegistrarChegadaRoute: typeof MotocicletasRegistrarChegadaRoute
-  ClientesIndexRoute: typeof ClientesIndexRoute
-  MotocicletasIndexRoute: typeof MotocicletasIndexRoute
-  PedidosIndexRoute: typeof PedidosIndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  ApiSplatRoute: typeof ApiSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/404': {
-      id: '/404'
+    '/_app/404': {
+      id: '/_app/404'
       path: '/404'
       fullPath: '/404'
-      preLoaderRoute: typeof R404RouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof App404RouteImport
+      parentRoute: typeof AppRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/api/$': {
+      id: '/api/$'
+      path: '/api/$'
+      fullPath: '/api/$'
+      preLoaderRoute: typeof ApiSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/clientes/': {
-      id: '/clientes/'
+    '/_app/clientes/': {
+      id: '/_app/clientes/'
       path: '/clientes'
       fullPath: '/clientes/'
-      preLoaderRoute: typeof ClientesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppClientesIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/motocicletas/': {
-      id: '/motocicletas/'
+    '/_app/motocicletas/': {
+      id: '/_app/motocicletas/'
       path: '/motocicletas'
       fullPath: '/motocicletas/'
-      preLoaderRoute: typeof MotocicletasIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppMotocicletasIndexRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/motocicletas/registrar-chegada': {
-      id: '/motocicletas/registrar-chegada'
+    '/_app/motocicletas/registrar-chegada': {
+      id: '/_app/motocicletas/registrar-chegada'
       path: '/motocicletas/registrar-chegada'
       fullPath: '/motocicletas/registrar-chegada'
-      preLoaderRoute: typeof MotocicletasRegistrarChegadaRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppMotocicletasRegistrarChegadaRouteImport
+      parentRoute: typeof AppRoute
     }
-    '/pedidos/': {
-      id: '/pedidos/'
+    '/_app/pedidos/': {
+      id: '/_app/pedidos/'
       path: '/pedidos'
       fullPath: '/pedidos/'
-      preLoaderRoute: typeof PedidosIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppPedidosIndexRouteImport
+      parentRoute: typeof AppRoute
     }
   }
 }
 
+interface AppRouteChildren {
+  App404Route: typeof App404Route
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppMotocicletasRegistrarChegadaRoute: typeof AppMotocicletasRegistrarChegadaRoute
+  AppClientesIndexRoute: typeof AppClientesIndexRoute
+  AppMotocicletasIndexRoute: typeof AppMotocicletasIndexRoute
+  AppPedidosIndexRoute: typeof AppPedidosIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  App404Route: App404Route,
+  AppDashboardRoute: AppDashboardRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppMotocicletasRegistrarChegadaRoute: AppMotocicletasRegistrarChegadaRoute,
+  AppClientesIndexRoute: AppClientesIndexRoute,
+  AppMotocicletasIndexRoute: AppMotocicletasIndexRoute,
+  AppPedidosIndexRoute: AppPedidosIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  R404Route: R404Route,
-  DashboardRoute: DashboardRoute,
-  MotocicletasRegistrarChegadaRoute: MotocicletasRegistrarChegadaRoute,
-  ClientesIndexRoute: ClientesIndexRoute,
-  MotocicletasIndexRoute: MotocicletasIndexRoute,
-  PedidosIndexRoute: PedidosIndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
+  ApiSplatRoute: ApiSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

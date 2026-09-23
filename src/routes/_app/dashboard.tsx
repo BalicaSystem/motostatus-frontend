@@ -37,7 +37,7 @@ import { formatDate } from "#/lib/formatDate";
 import { formatDateTime } from "#/lib/formatDateTime";
 import { getInitials } from "#/lib/utils";
 
-export const Route = createFileRoute("/dashboard")({
+export const Route = createFileRoute("/_app/dashboard")({
 	component: DashboardPage,
 });
 

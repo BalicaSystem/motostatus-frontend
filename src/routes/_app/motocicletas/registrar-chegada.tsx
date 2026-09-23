@@ -4,7 +4,7 @@ import { PageContainer } from "#/components/layout/page-container";
 import { PageHeader } from "#/components/layout/page-header";
 import { MotorcycleCheckInForm } from "#/features/motorcycles/components/motorcycle-check-in-form";
 
-export const Route = createFileRoute("/motocicletas/registrar-chegada")({
+export const Route = createFileRoute("/_app/motocicletas/registrar-chegada")({
 	component: RegistrarChegadaPage,
 });
 

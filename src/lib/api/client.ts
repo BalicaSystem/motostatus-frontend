@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL;
+import { clearSessionUser } from "#/features/auth/session";
 
 export class ApiError extends Error {
 	constructor(
@@ -17,7 +17,7 @@ export async function api<T>(path: string, options?: RequestInit): Promise<T> {
 		headers.set("Content-Type", "application/json");
 	}
 
-	const response = await fetch(`${API_URL}${path}`, {
+	const response = await fetch(`/api${path}`, {
 		...options,
 		signal: options?.signal,
 		headers,
@@ -25,6 +25,14 @@ export async function api<T>(path: string, options?: RequestInit): Promise<T> {
 
 	if (!response.ok) {
 		const contentType = response.headers.get("content-type");
+
+		if (response.status === 401 && !path.startsWith("/auth/")) {
+			clearSessionUser();
+
+			if (typeof window !== "undefined") {
+				window.location.assign("/login");
+			}
+		}
 
 		if (contentType?.includes("application/json")) {
 			const error = await response.json();

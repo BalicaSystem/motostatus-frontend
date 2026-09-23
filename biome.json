@@ -41,6 +41,16 @@
 					}
 				}
 			}
+		},
+		{
+			"includes": ["src/features/auth/session.ts"],
+			"linter": {
+				"rules": {
+					"suspicious": {
+						"noDocumentCookie": "off"
+					}
+				}
+			}
 		}
 	],
 	"javascript": {

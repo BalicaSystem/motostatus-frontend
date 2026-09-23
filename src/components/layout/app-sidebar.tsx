@@ -1,12 +1,12 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
 	Bike,
 	ClipboardList,
 	LayoutDashboard,
+	LogOut,
 	QrCode,
 	Users,
 } from "lucide-react";
-
 import {
 	Sidebar,
 	SidebarContent,
@@ -19,6 +19,8 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "#/components/ui/sidebar";
+import { signOut } from "#/features/auth/auth-service";
+import { useSessionUser } from "#/features/auth/session";
 
 const navigation = [
 	{
@@ -59,6 +61,15 @@ const navigation = [
 ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const navigate = useNavigate();
+	const user = useSessionUser();
+
+	async function handleSignOut() {
+		await signOut();
+
+		await navigate({ to: "/login", replace: true });
+	}
+
 	return (
 		<Sidebar {...props}>
 			<SidebarHeader className="border-b border-sidebar-border px-4 py-4">
@@ -122,18 +133,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarFooter className="border-t border-sidebar-border px-4 py-3">
 				<div className="flex items-center gap-3">
 					<div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-primary font-display text-xs font-bold text-sidebar-primary-foreground">
-						SM
+						{(user?.name ?? "SM").slice(0, 2).toUpperCase()}
 					</div>
 
-					<div className="min-w-0">
+					<div className="min-w-0 flex-1">
 						<p className="truncate text-sm font-semibold text-sidebar-foreground">
-							Administrador
+							{user?.name ?? "Administrador"}
 						</p>
 
 						<p className="truncate font-mono text-[0.6rem] tracking-wider text-sidebar-foreground/60 uppercase">
-							Status Moto
+							{user?.email ?? "Status Moto"}
 						</p>
 					</div>
+
+					<SidebarMenuButton
+						size="sm"
+						title="Sair"
+						onClick={handleSignOut}
+						className="h-8 w-8 shrink-0 justify-center text-muted-foreground hover:text-destructive"
+					>
+						<LogOut className="size-4" />
+					</SidebarMenuButton>
 				</div>
 			</SidebarFooter>
 		</Sidebar>

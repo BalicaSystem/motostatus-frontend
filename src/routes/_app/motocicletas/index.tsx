@@ -25,7 +25,7 @@ import { useMotorcycles } from "#/features/motorcycles/hooks/use-motorcycles";
 import type { Motorcycle } from "#/features/motorcycles/types/motorcycle";
 import { useDebouncedValue } from "#/lib/use-debounced-value";
 
-export const Route = createFileRoute("/motocicletas/")({
+export const Route = createFileRoute("/_app/motocicletas/")({
 	validateSearch: (search) => ({
 		page: Number(search.page) || 1,
 		q: typeof search.q === "string" ? search.q.trim() : "",

@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { PageContainer } from "#/components/layout/page-container";
 import { Button } from "#/components/ui/button";
 
-export const Route = createFileRoute("/404")({
+export const Route = createFileRoute("/_app/404")({
 	component: NotFoundPage,
 });
 
